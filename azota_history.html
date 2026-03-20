@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ôn Lịch Sử 12 - Bài 12-13-14</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4f8;color:#1a1a2e}
+.header{background:linear-gradient(135deg,#7c1d1d,#c0392b);color:white;padding:18px 24px}
+.header h1{font-size:20px;font-weight:700}
+.header p{font-size:13px;opacity:.85;margin-top:4px}
+.header-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-top:8px}
+.made-by{font-size:12px;opacity:.75;background:rgba(255,255,255,.15);padding:3px 10px;border-radius:20px}
+.made-by span{font-weight:700}
+.scoring-rule{font-size:12px;opacity:.85;background:rgba(255,255,255,.12);padding:3px 10px;border-radius:20px}
+.tab-bar{display:flex;background:white;border-bottom:2px solid #e2e8f0;overflow-x:auto}
+.tab{padding:12px 20px;cursor:pointer;font-size:14px;font-weight:600;color:#64748b;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s}
+.tab.active{color:#7c1d1d;border-bottom-color:#c0392b;background:#fff5f5}
+.tab:hover{background:#fef2f2}
+.container{max-width:860px;margin:0 auto;padding:20px 16px}
+.score-bar{background:white;border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:20px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.score-circle{width:72px;height:72px;border-radius:50%;background:#7c1d1d;color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:20px;font-weight:700;flex-shrink:0;line-height:1.1}
+.score-circle small{font-size:10px;font-weight:400;opacity:.8}
+.score-info{flex:1}
+.score-info h3{font-size:15px;font-weight:600;color:#7c1d1d}
+.score-info p{font-size:13px;color:#64748b;margin-top:3px}
+.score-detail{display:flex;gap:14px;margin-top:6px;flex-wrap:wrap}
+.score-chip{font-size:12px;padding:2px 10px;border-radius:20px;font-weight:600}
+.chip-correct{background:#dcfce7;color:#166534}
+.chip-wrong{background:#fee2e2;color:#991b1b}
+.chip-minus{background:#fef3c7;color:#92400e}
+.progress-bar{height:8px;background:#e2e8f0;border-radius:4px;margin-top:8px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#7c1d1d,#c0392b);border-radius:4px;transition:width .4s}
+.btn-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn-reset{padding:8px 16px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;color:#475569;transition:all .2s}
+.btn-reset:hover{background:#e2e8f0}
+.btn-shuffle{padding:8px 16px;background:#fef3c7;border:1px solid #fde68a;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;color:#92400e;transition:all .2s;display:flex;align-items:center;gap:5px}
+.btn-shuffle:hover{background:#fde68a}
+.btn-shuffle.active{background:#d97706;color:white;border-color:#d97706}
+.section-title{font-size:15px;font-weight:700;color:#7c1d1d;margin:24px 0 12px;padding:10px 14px;background:#fee2e2;border-radius:8px;border-left:4px solid #c0392b}
+.question-card{background:white;border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1.5px solid #e2e8f0;transition:border-color .2s}
+.question-card.correct{border-color:#22c55e;background:#f0fdf4}
+.question-card.wrong{border-color:#ef4444;background:#fef2f2}
+.q-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.q-num{width:28px;height:28px;border-radius:50%;background:#7c1d1d;color:white;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.q-text{font-size:14.5px;line-height:1.6;color:#1e293b;flex:1}
+.q-text em{font-style:italic;color:#475569}
+.tl-badge{font-size:11px;background:#dbeafe;color:#1e40af;padding:2px 8px;border-radius:20px;font-weight:600;margin-left:6px;white-space:nowrap}
+.ds-badge{font-size:11px;background:#f3e8ff;color:#6b21a8;padding:2px 8px;border-radius:20px;font-weight:600;margin-left:6px;white-space:nowrap}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;cursor:pointer;transition:all .15s;font-size:14px;color:#334155}
+.option:hover{border-color:#fca5a5;background:#fff5f5}
+.option.selected{border-color:#7c1d1d;background:#fff5f5}
+.option.correct-ans{border-color:#22c55e!important;background:#f0fdf4!important;color:#166534!important;font-weight:600}
+.option.wrong-ans{border-color:#ef4444!important;background:#fef2f2!important;color:#991b1b!important}
+.option input[type=radio]{accent-color:#7c1d1d;width:16px;height:16px;flex-shrink:0;pointer-events:none}
+.opt-label{font-weight:700;color:#7c1d1d;min-width:20px}
+.feedback{display:none;margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13.5px;line-height:1.6}
+.feedback.show{display:block}
+.feedback.correct-fb{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534}
+.feedback.wrong-fb{background:#fef2f2;border-left:4px solid #ef4444;color:#991b1b}
+.explain-btn{margin-top:8px;padding:5px 12px;border-radius:6px;border:1px solid #22c55e;background:white;color:#166534;cursor:pointer;font-size:12px;font-weight:600}
+.explain-btn:hover{background:#dcfce7}
+.explain-box{display:none;margin-top:10px;padding:10px 14px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;font-size:13px;color:#334155;line-height:1.7}
+.explain-box.show{display:block}
+.ds-section{background:white;border-radius:12px;padding:20px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1.5px solid #e2e8f0}
+.ds-q-title{font-size:14.5px;font-weight:600;color:#1e293b;margin-bottom:10px;line-height:1.6}
+.ds-quote{background:#fef9c3;border-left:4px solid #f59e0b;padding:10px 14px;border-radius:6px;font-size:13px;font-style:italic;color:#44403c;line-height:1.7;margin-bottom:14px}
+.ds-options{display:flex;flex-direction:column;gap:8px}
+.ds-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;cursor:pointer;transition:all .15s;font-size:13.5px;color:#334155}
+.ds-option:hover{border-color:#fca5a5;background:#fff5f5}
+.ds-option.selected-T{border-color:#16a34a;background:#f0fdf4}
+.ds-option.selected-F{border-color:#dc2626;background:#fef2f2}
+.ds-option.correct-T{border-color:#16a34a!important;background:#f0fdf4!important;color:#14532d!important;font-weight:600}
+.ds-option.correct-F{border-color:#dc2626!important;background:#fef2f2!important;color:#7f1d1d!important;font-weight:600}
+.ds-option.wrong-ans-ds{border-color:#ef4444!important;background:#fef2f2!important}
+.ds-btns{display:flex;gap:6px;flex-shrink:0;margin-top:1px}
+.ds-btn{padding:4px 10px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;border:1.5px solid;transition:all .15s}
+.ds-btn-T{border-color:#16a34a;color:#16a34a;background:white}
+.ds-btn-T:hover,.ds-btn-T.sel{background:#16a34a;color:white}
+.ds-btn-F{border-color:#dc2626;color:#dc2626;background:white}
+.ds-btn-F:hover,.ds-btn-F.sel{background:#dc2626;color:white}
+.ds-feedback{display:none;margin-top:8px;padding:8px 12px;border-radius:6px;font-size:13px}
+.ds-feedback.show{display:block}
+.ds-feedback.ok{background:#f0fdf4;border-left:3px solid #22c55e;color:#166534}
+.ds-feedback.nok{background:#fef2f2;border-left:3px solid #ef4444;color:#991b1b}
+.warn-box{background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#78350f}
+@media(max-width:600px){.container{padding:12px 8px}.q-text{font-size:14px}}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Ôn Lịch Sử 12 — Bài 12 · 13 · 14</h1>
+  <p>Chủ đề 5 &amp; 6: Lịch sử đối ngoại Việt Nam &amp; Hồ Chí Minh</p>
+  <div class="header-meta">
+    <span class="made-by">Được làm bởi <span>Lam Lam ✨</span></span>
+    <span class="scoring-rule">+0.312đ/câu đúng &nbsp;|&nbsp; −0.19đ/câu sai &nbsp;|&nbsp; Tổng: 10đ</span>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="showPractice(1)">Bài 12</div>
+  <div class="tab" onclick="showPractice(2)">Bài 13</div>
+  <div class="tab" onclick="showPractice(3)">Bài 14 (HCM)</div>
+</div>
+
+<!-- ═══════════════ BÀI 12 ═══════════════ -->
+<div id="practice-1" class="practice-panel">
+<div class="container">
+  <div class="score-bar">
+    <div class="score-circle" id="score1-circle">0.00<small>/10đ</small></div>
+    <div class="score-info">
+      <h3>Bài 12 — Đối ngoại từ đầu TK XX đến 1975</h3>
+      <p id="score1-text">Chưa làm câu nào. Bấm chọn để bắt đầu!</p>
+      <div class="score-detail" id="score1-detail" style="display:none">
+        <span class="score-chip chip-correct" id="s1-correct">✓ 0 đúng</span>
+        <span class="score-chip chip-wrong" id="s1-wrong">✗ 0 sai</span>
+        <span class="score-chip chip-minus" id="s1-skip">— 0 chưa làm</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress1" style="width:0%"></div></div>
+    </div>
+    <div class="btn-actions">
+      <button class="btn-shuffle" id="shuffle-btn-1" onclick="toggleShuffle(1)">🔀 Xáo trộn</button>
+      <button class="btn-reset" onclick="resetPractice(1)">↺ Làm lại</button>
+    </div>
+  </div>
+  <div class="section-title">Trắc nghiệm 4 đáp án (Câu 1–16, 20–26, 28, 30–31, 33)</div>
+  <div id="p1-mc"></div>
+  <div class="section-title">Đúng/Sai (Câu 17–19, 27, 29, 32)</div>
+  <div id="p1-ds"></div>
+</div>
+</div>
+
+<!-- ═══════════════ BÀI 13 ═══════════════ -->
+<div id="practice-2" class="practice-panel" style="display:none">
+<div class="container">
+  <div class="score-bar">
+    <div class="score-circle" id="score2-circle">0.00<small>/10đ</small></div>
+    <div class="score-info">
+      <h3>Bài 13 — Đối ngoại từ 1975 đến nay</h3>
+      <p id="score2-text">Chưa làm câu nào. Bấm chọn để bắt đầu!</p>
+      <div class="score-detail" id="score2-detail" style="display:none">
+        <span class="score-chip chip-correct" id="s2-correct">✓ 0 đúng</span>
+        <span class="score-chip chip-wrong" id="s2-wrong">✗ 0 sai</span>
+        <span class="score-chip chip-minus" id="s2-skip">— 0 chưa làm</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress2" style="width:0%"></div></div>
+    </div>
+    <div class="btn-actions">
+      <button class="btn-shuffle" id="shuffle-btn-2" onclick="toggleShuffle(2)">🔀 Xáo trộn</button>
+      <button class="btn-reset" onclick="resetPractice(2)">↺ Làm lại</button>
+    </div>
+  </div>
+  <div class="section-title">Trắc nghiệm 4 đáp án (Câu 1–8, 12–19)</div>
+  <div id="p2-mc"></div>
+  <div class="section-title">Đúng/Sai (Câu 9–11)</div>
+  <div id="p2-ds"></div>
+</div>
+</div>
+
+<!-- ═══════════════ BÀI 14 ═══════════════ -->
+<div id="practice-3" class="practice-panel" style="display:none">
+<div class="container">
+  <div class="score-bar">
+    <div class="score-circle" id="score3-circle">0.00<small>/10đ</small></div>
+    <div class="score-info">
+      <h3>Bài 14 — Hồ Chí Minh: Khái quát cuộc đời &amp; sự nghiệp</h3>
+      <p id="score3-text">Chưa làm câu nào. Bấm chọn để bắt đầu!</p>
+      <div class="score-detail" id="score3-detail" style="display:none">
+        <span class="score-chip chip-correct" id="s3-correct">✓ 0 đúng</span>
+        <span class="score-chip chip-wrong" id="s3-wrong">✗ 0 sai</span>
+        <span class="score-chip chip-minus" id="s3-skip">— 0 chưa làm</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress3" style="width:0%"></div></div>
+    </div>
+    <div class="btn-actions">
+      <button class="btn-shuffle" id="shuffle-btn-3" onclick="toggleShuffle(3)">🔀 Xáo trộn</button>
+      <button class="btn-reset" onclick="resetPractice(3)">↺ Làm lại</button>
+    </div>
+  </div>
+  <div class="section-title">Trắc nghiệm 4 đáp án (Câu 1–10, 14–20)</div>
+  <div id="p3-mc"></div>
+  <div class="section-title">Đúng/Sai (Câu 11–13, 21–24)</div>
+  <div id="p3-ds"></div>
+</div>
+</div>
+
+<div style="text-align:center;padding:32px 16px 24px;color:#94a3b8;font-size:13px">
+  <div style="font-size:22px;margin-bottom:8px">✨</div>
+  <div>Được làm bởi <strong style="color:#7c1d1d">Lam Lam</strong></div>
+  <div style="margin-top:6px;font-size:12px">Chúc bạn ôn thi Lịch Sử thật tốt! 🌹</div>
+  <div style="margin-top:10px;font-size:11px;background:#fee2e2;color:#991b1b;display:inline-block;padding:4px 16px;border-radius:20px;font-weight:600">+0.312đ ✓ đúng &nbsp;|&nbsp; −0.19đ ✗ sai &nbsp;|&nbsp; Tổng = 10 điểm</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════
+const PRACTICES = {
+ 1: {
+  mc: [
+   {num:1,q:"Đầu thế kỉ XX, một số nhà yêu nước Việt Nam đã có những hoạt động đối ngoại bước đầu nhằm mục tiêu",opts:["A. thống nhất đất nước.","B. giải phóng giai cấp.","C. đi lên chủ nghĩa xã hội.","D. giải phóng dân tộc."],ans:"D",
+    explain:"Đúng là D. Đầu thế kỷ XX đất nước đang bị thực dân Pháp đô hộ → mục tiêu hàng đầu là <strong>giải phóng dân tộc</strong> — thoát khỏi ách nô lệ. Thống nhất đất nước (A) là mục tiêu sau này; giải phóng giai cấp (B) và CNXH (C) chưa phải mục tiêu giai đoạn này."},
+   {num:2,q:"Trong giai đoạn 1905–1909, hoạt động đối ngoại của Phan Bội Châu là",opts:["A. tổ chức phong trào Duy tân.","B. khởi xướng phong trào Đông Kinh nghĩa thục.","C. tổ chức phong trào Đông du.","D. khởi xướng cuộc vận động chống thuế ở Trung Kì."],ans:"C",
+    explain:"Đúng là C. Năm 1905 Phan Bội Châu sang Nhật, tổ chức <strong>phong trào Đông du</strong> — đưa thanh niên Việt Nam sang Nhật học. Duy tân (A) là của Phan Châu Trinh; Đông Kinh nghĩa thục (B) là trường học yêu nước ở Hà Nội do nhóm khác tổ chức."},
+   {num:3,q:"Trong giai đoạn 1909–1925, Phan Bội Châu đã thành lập và triển khai các hoạt động của tổ chức nào sau đây?",opts:["A. Việt Nam Quang phục Hội.","B. Đông Nam Á Đồng minh Hội.","C. Điền–Quảng–Việt Liên minh.","D. Điền–Quế–Việt Liên minh."],ans:"A",
+    explain:"Đúng là A. Đầu năm 1912, Phan Bội Châu thành lập <strong>Việt Nam Quang phục Hội</strong> ở Quảng Châu (Trung Quốc), chủ trương đánh đuổi Pháp giành độc lập. Năm 1908 ông tham gia Điền–Quế–Việt liên minh (D) nhưng tổ chức tiêu biểu giai đoạn này là Quang phục Hội."},
+   {num:4,q:"Nội dung nào sau đây là hoạt động đối ngoại của Phan Châu Trinh năm 1906?",opts:["A. Sang Nhật Bản rồi về nước, đề nghị chính quyền Pháp cải cách chế độ cai trị ở Việt Nam.","B. Sang Trung Quốc rồi về nước, khởi xướng phong trào Đông du.","C. Sang phương Tây rồi sang Nhật Bản, tổ chức hoạt động Đông du.","D. Sang Nhật Bản rồi sang Trung Quốc, gửi thư về nước yêu cầu cải cách."],ans:"A",
+    explain:"Đúng là A. Năm 1906 Phan Châu Trinh sang Nhật quan sát, rồi về nước gửi thư (Điều trần) đề nghị chính quyền Pháp <strong>cải cách chế độ cai trị</strong>. Khác Phan Bội Châu muốn bạo động, Phan Châu Trinh chủ trương vận động cải lương hợp pháp."},
+   {num:5,q:"Trong giai đoạn 1911–1925, hoạt động đối ngoại của Phan Châu Trinh chủ yếu diễn ra ở",opts:["A. Nhật Bản.","B. Pháp.","C. Liên Xô.","D. Thái Lan."],ans:"B",
+    explain:"Đúng là B. Từ 1911 Phan Châu Trinh sang <strong>Pháp</strong> hoạt động, viết báo, diễn thuyết vạch trần tội ác thực dân, tiếp xúc các tổ chức tiến bộ tại Paris cho đến khi về nước năm 1925."},
+   {num:6,q:"Một trong những hình thức hoạt động đối ngoại của Phan Châu Trinh trong giai đoạn 1911–1925 là",opts:["A. viết báo, biểu tình.","B. viết sách, tổ chức mít tinh.","C. đấu tranh nghị trường.","D. viết báo, diễn thuyết."],ans:"D",
+    explain:"Đúng là D. Phan Châu Trinh dùng hình thức <strong>viết báo và diễn thuyết</strong> để thức tỉnh dư luận Pháp và người Việt về tình hình đất nước, vận động cải cách. Đây là phương pháp phi bạo lực, phù hợp chủ trương cải lương của ông."},
+   {num:7,q:"Nội dung nào sau đây là hoạt động đối ngoại của Nguyễn Ái Quốc trong giai đoạn 1918–1920?",opts:["A. Tham gia sáng lập và lãnh đạo Đảng Vô sản Pháp.","B. Gia nhập Đảng Cộng sản Pháp, bỏ phiếu tán thành gia nhập Quốc tế thứ ba.","C. Gia nhập Đảng Xã hội Pháp, tham gia sáng lập Đảng Cộng sản Pháp.","D. Gia nhập Quốc tế thứ nhất, sáng lập Đảng Cộng sản Pháp."],ans:"C",
+    explain:"Đúng là C. 1919: Nguyễn Ái Quốc gia nhập <strong>Đảng Xã hội Pháp</strong>. 12/1920 tại Đại hội Tours: bỏ phiếu tán thành Quốc tế III và <strong>tham gia sáng lập Đảng Cộng sản Pháp</strong>. Không phải 'Gia nhập ĐCSP' (B) vì ĐCS Pháp chưa tồn tại trước 1920."},
+   {num:8,q:"Trong giai đoạn 1921–1930, Nguyễn Ái Quốc đã tham gia sáng lập tổ chức nào sau đây?",opts:["A. Hội Liên hiệp các dân tộc bị áp bức ở Á Đông.","B. Hội Liên hiệp các dân tộc bị áp bức ở Đông Nam Á.","C. Hội Liên hiệp các nước thuộc địa và phụ thuộc.","D. Hội Liên hiệp các nước thuộc địa Pháp."],ans:"A",
+    explain:"Đúng là A. Theo SGK KNTTT: giai đoạn 1921–1930 Nguyễn Ái Quốc tham gia sáng lập <strong>Hội Liên hiệp thuộc địa</strong> (1921, ở Pháp) và <strong>Hội Liên hiệp các dân tộc bị áp bức ở Á Đông</strong> (1925, ở Trung Quốc). Đáp án A là tổ chức quan trọng hơn phù hợp câu hỏi."},
+   {num:9,q:"Một trong những hoạt động đối ngoại của Đảng Cộng sản Đông Dương trong giai đoạn 1930–1940 là duy trì liên lạc với các tổ chức nào sau đây?",opts:["A. Quốc tế Vô sản, các đảng công nhân và phong trào cách mạng châu Á.","B. Quốc tế Cộng sản, các đảng cộng sản ở các nước.","C. Các đảng phái chính trị và phong trào công nhân trên thế giới.","D. Các đảng phái vô sản và phong trào yêu nước trên thế giới."],ans:"B",
+    explain:"Đúng là B. Giai đoạn 1930–1940, ĐCSĐD duy trì liên lạc với <strong>Quốc tế Cộng sản (Comintern)</strong> và <strong>các đảng cộng sản</strong> ở các nước để tranh thủ sự ủng hộ quốc tế. Đây là đặc điểm nổi bật của hoạt động đối ngoại giai đoạn này theo SGK."},
+   {num:10,q:"Trước ngày 6-3-1946, Chính phủ VNDCCH đã thực hiện chính sách ngoại giao nào sau đây?",opts:["A. Mềm mỏng với quân đội Trung Hoa Dân Quốc.","B. Mềm mỏng với quân đội Pháp.","C. Kiên quyết chống quân đội Trung Hoa Dân Quốc.","D. Nỗ lực thiết lập quan hệ với chính quyền Trung Quốc và Nhật Bản."],ans:"A",
+    explain:"Đúng là A. Trước 6/3/1946, ta thực hiện 'hòa hoãn' với quân Tưởng (THDQ) đang đóng ở miền Bắc nhằm tập trung đối phó Pháp ở miền Nam. Sách lược <strong>mềm mỏng với quân Tưởng</strong> (nhường ghế Chính phủ, chấp nhận tiêu tiền Tưởng...) giúp tránh phải đối đầu hai kẻ thù cùng lúc."},
+   {num:11,q:"Năm 1946, Chính phủ VNDCCH đã ký với Pháp",opts:["A. Hiệp định đình chiến và Hoà ước Pháp–Việt.","B. Hiệp định Sơ bộ và bản Tạm ước Việt–Pháp.","C. Hiệp định Giơ-ne-vơ và Hoà ước Việt–Pháp.","D. Hiệp định Sơ bộ và Hoà ước Việt–Pháp."],ans:"B",
+    explain:"Đúng là B. Năm 1946 ta ký hai văn kiện: <strong>Hiệp định Sơ bộ (6/3/1946)</strong> — Pháp công nhận VN là quốc gia tự do trong LH Pháp; và <strong>Tạm ước Việt–Pháp (14/9/1946)</strong> — kéo dài thêm thời gian hòa hoãn. Giơ-ne-vơ (C) là năm 1954."},
+   {num:12,q:"Năm 1950, nước VNDCCH đã thiết lập quan hệ ngoại giao với hai quốc gia nào sau đây?",opts:["A. In-đô-nê-xi-a, Ma-lai-xi-a.","B. Lào, Triều Tiên.","C. Pháp, Liên Xô.","D. Trung Quốc, Liên Xô."],ans:"D",
+    explain:"Đúng là D. Đầu 1950, <strong>Trung Quốc</strong> (18/1) và <strong>Liên Xô</strong> (30/1) lần lượt công nhận và thiết lập quan hệ ngoại giao với VNDCCH — đây là thắng lợi chính trị to lớn đầu tiên, tạo điều kiện cho viện trợ vật chất sau này."},
+   {num:13,q:"Năm 1951 đã diễn ra hội nghị nào sau đây?",opts:["A. Hội nghị thành lập Liên minh nhân dân Việt–Miên–Lào.","B. Hội nghị Giơ-ne-vơ về Đông Dương.","C. Hội nghị thành lập Hội Liên hiệp Việt–Miên–Lào.","D. Hội nghị thành lập Liên minh chiến đấu Việt–Lào."],ans:"A",
+    explain:"Đúng là A. Tháng 3/1951 tại Tuyên Quang diễn ra Hội nghị thành lập <strong>Liên minh nhân dân Việt–Miên–Lào</strong> (ba nước Đông Dương cùng chống Pháp) trên cơ sở tự nguyện, bình đẳng. Hội nghị Giơ-ne-vơ (B) là 1954."},
+   {num:14,q:"Hoạt động đối ngoại chủ yếu của Việt Nam trong thời kì 1954–1975 tập trung phục vụ sự nghiệp nào sau đây?",opts:["A. Xây dựng chủ nghĩa xã hội.","B. Giải phóng miền Nam, thống nhất đất nước.","C. Xây dựng và bảo vệ miền Bắc.","D. Bảo vệ chủ nghĩa xã hội trên cả nước."],ans:"B",
+    explain:"Đúng là B. Sau 1954 đất nước bị chia cắt, ngoại giao phục vụ mục tiêu trọng tâm là <strong>giải phóng miền Nam, thống nhất đất nước</strong>: tranh thủ sự ủng hộ quốc tế, đấu tranh đòi thi hành Hiệp định Giơ-ne-vơ, kí Hiệp định Pa-ri..."},
+   {num:15,q:"Năm 1973, Việt Nam thiết lập, mở rộng quan hệ ngoại giao với những quốc gia nào sau đây?",opts:["A. Pháp, Nhật Bản, Ô-xtrây-li-a.","B. Cu-ba, Ni-giê-ri-a, Hà Lan.","C. Hà Lan, Pháp, Cu-ba.","D. Cu-ba, Ca-mơ-run, Pháp."],ans:"A",
+    explain:"Đúng là A. Theo SGK Cánh Diều: sau khi ký Hiệp định Pa-ri (1/1973), Việt Nam thiết lập quan hệ với <strong>Pháp, Nhật Bản, Ô-xtrây-li-a</strong> năm 1973. Cu-ba (1960), Ca-mơ-run (1972) là trước đó; Ni-giê-ri-a (1975)."},
+   {num:16,q:"Một trong những biểu hiện của hoạt động đối ngoại nhân dân trong kháng chiến chống Mỹ (1954–1975) là",opts:["A. thành lập các cơ quan ngoại giao tại nước ngoài.","B. tiếp nhận viện trợ từ các nước xã hội chủ nghĩa.","C. thành lập Uỷ ban Việt Nam đoàn kết với nhân dân Mỹ.","D. đưa ngoại giao nhân dân trở thành một mặt trận bên cạnh chính trị và quân sự."],ans:"C",
+    explain:"Đúng là C. Hoạt động đối ngoại nhân dân tiêu biểu là thành lập <strong>Uỷ ban Việt Nam đoàn kết với nhân dân Mỹ</strong> — tác động trực tiếp vào dư luận và phong trào phản chiến ngay trong lòng nước Mỹ. A và B là hoạt động đối ngoại nhà nước; D là định nghĩa chung."},
+   {num:20,q:"Đầu thế kỉ XX, Phan Bội Châu, Phan Châu Trinh, Nguyễn Ái Quốc là những nhà yêu nước Việt Nam tiêu biểu thực hiện",opts:["A. những hoạt động đối ngoại bước đầu.","B. những hoạt động ngoại giao chính thức.","C. các hoạt động ngoại giao với các nước.","D. các hoạt động đối ngoại chính thức."],ans:"A",
+    explain:"Đúng là A. Ba nhân vật này thực hiện các hoạt động <strong>đối ngoại bước đầu</strong> — chưa phải ngoại giao nhà nước chính thức (B,D) vì khi đó Việt Nam chưa có nhà nước độc lập. Đây là giai đoạn đặt nền móng cho ngoại giao hiện đại Việt Nam."},
+   {num:21,q:"Trong giai đoạn 1905–1909, những hoạt động đối ngoại của Phan Bội Châu chủ yếu diễn ra ở",opts:["A. Liên Xô.","B. Xiêm (Thái Lan).","C. Trung Quốc.","D. Nhật Bản."],ans:"D",
+    explain:"Đúng là D. 1905–1909 Phan Bội Châu hoạt động chủ yếu tại <strong>Nhật Bản</strong> — tổ chức phong trào Đông du, nhờ giúp đỡ vũ khí, đào tạo nhân lực. Năm 1909 bị Nhật trục xuất mới sang Trung Quốc."},
+   {num:22,q:"Trong những năm ở Pháp giai đoạn 1911–1925, Phan Châu Trinh đã có hoạt động đối ngoại nào sau đây?",opts:["A. Viết báo, diễn thuyết để thức tỉnh dư luận Pháp về tình hình Việt Nam.","B. Sáng lập Hội Chấn Hoa Hưng Á và nhiều tổ chức chính trị khác.","C. Tố cáo và lên án Chính phủ Pháp cùng chính phủ các nước phương Tây.","D. Tổ chức phong trào Đông du, tham gia các hoạt động của Đảng Xã hội Pháp."],ans:"A",
+    explain:"Đúng là A. Tại Pháp, Phan Châu Trinh <strong>viết báo, diễn thuyết</strong> vạch trần tội ác thực dân, kêu gọi dư luận Pháp ủng hộ cải cách. Hội Chấn Hoa Hưng Á (B) là của Phan Bội Châu. Đông du (D) là phong trào sang Nhật, không phải Pháp."},
+   {num:23,q:"Trong giai đoạn 1921–1930, Nguyễn Ái Quốc đã tham gia sáng lập",opts:["A. Hội Liên hiệp thuộc địa.","B. Hội Liên hiệp các dân tộc bị áp bức ở Đông Nam Á.","C. Hội Liên hiệp các nước thuộc địa và phụ thuộc châu Á.","D. Hội Liên hiệp các quốc gia bị áp bức ở Đông Á."],ans:"A",
+    explain:"Đúng là A. 1921 tại Paris, Nguyễn Ái Quốc tham gia sáng lập <strong>Hội Liên hiệp thuộc địa</strong> — tập hợp người các nước thuộc địa Pháp đấu tranh chống thực dân. Đây là tổ chức quốc tế đầu tiên ông sáng lập."},
+   {num:24,q:"Hoạt động đối ngoại của Đảng Cộng sản Đông Dương trong giai đoạn 1930–1940 là",opts:["A. duy trì liên lạc với Quốc tế Cộng sản, các đảng cộng sản và phong trào vô sản ở các nước.","B. duy trì liên lạc với Quốc tế Vô sản, các đảng xã hội và phong trào vô sản ở các nước.","C. thể hiện sự ủng hộ Liên Xô, các nước XHCN và các nước thuộc phe Đồng minh.","D. thể hiện sự ủng hộ các nước thuộc phe Đồng minh và các nước xã hội chủ nghĩa."],ans:"A",
+    explain:"Đúng là A. ĐCSĐD duy trì liên lạc với <strong>Quốc tế Cộng sản (Comintern)</strong> — tổ chức quốc tế của các đảng cộng sản — và các đảng cộng sản ở các nước. Đây là cơ chế liên kết phong trào cộng sản quốc tế do Liên Xô lãnh đạo giai đoạn này."},
+   {num:25,q:"Trong giai đoạn 1941–1945, chủ trương và chính sách đối ngoại của ĐCSĐD được thể hiện chủ yếu thông qua tổ chức nào?",opts:["A. Ban Chỉ huy hải ngoại.","B. Mặt trận Liên Việt.","C. Quốc tế Cộng sản.","D. Mặt trận Việt Minh."],ans:"D",
+    explain:"Đúng là D. Từ 1941, <strong>Mặt trận Việt Minh</strong> (do Nguyễn Ái Quốc sáng lập tháng 5/1941) trở thành công cụ chủ yếu để thực hiện đối ngoại: tìm kiếm liên minh chống phát-xít, tiếp xúc với quân Đồng minh..."},
+   {num:26,q:"Nhà nước VNDCCH sau khi mới ra đời đã thực hiện các hoạt động đối ngoại nhằm",opts:["A. bảo vệ chính quyền, thống nhất đất nước, hoàn thành cách mạng dân tộc dân chủ nhân dân.","B. tranh thủ sự ủng hộ của quốc tế đối với sự nghiệp đấu tranh bảo vệ độc lập dân tộc.","C. tránh đối đầu cùng lúc nhiều kẻ thù, từng bước đánh bại quân Tưởng và Trung Hoa Dân Quốc.","D. tránh chiến tranh, đàm phán thương lượng bằng mọi giá, đặc biệt là với Chính phủ Pháp."],ans:"A",
+    explain:"Đúng là A. Mục tiêu bao quát nhất của đối ngoại VNDCCH giai đoạn đầu là <strong>bảo vệ chính quyền cách mạng non trẻ</strong>, thống nhất đất nước và hoàn thành sự nghiệp giải phóng. Tránh đối đầu (C,D) chỉ là sách lược, không phải mục tiêu."},
+   {num:28,q:"Năm 1950, quốc gia đầu tiên trên thế giới thiết lập quan hệ ngoại giao với VNDCCH là",opts:["A. Liên Xô.","B. Trung Quốc.","C. Cộng hoà Dân chủ Đức.","D. Cộng hoà Liên bang Đức."],ans:"B",
+    explain:"Đúng là B. <strong>Trung Quốc</strong> (18/1/1950) là nước đầu tiên công nhận và thiết lập quan hệ ngoại giao với VNDCCH, sau đó Liên Xô (30/1/1950). Điều này có ý nghĩa to lớn khi Cách mạng Trung Quốc vừa thắng lợi (1949), tạo hậu phương vững chắc cho ta."},
+   {num:30,q:"Trong thời kì 1954–1975, hoạt động đối ngoại của Việt Nam tập trung phục vụ sự nghiệp nào?",opts:["A. Bảo vệ miền Bắc, xây dựng chủ nghĩa xã hội.","B. Giải phóng miền Nam, thống nhất đất nước.","C. Bảo vệ và thống nhất chủ nghĩa xã hội.","D. Thống nhất đất nước bằng con đường hoà bình."],ans:"B",
+    explain:"Đúng là B. Mục tiêu bao trùm mọi hoạt động đối ngoại 1954–1975 là <strong>giải phóng miền Nam, thống nhất đất nước</strong>. Xây dựng CNXH ở miền Bắc (A) là nhiệm vụ song song nhưng ngoại giao tập trung phục vụ mục tiêu thống nhất."},
+   {num:31,q:"Trong cuộc kháng chiến chống Mỹ (1954–1975), Việt Nam chủ yếu củng cố, phát triển quan hệ với",opts:["A. Trung Quốc, Liên Xô và các nước xã hội chủ nghĩa.","B. Trung Quốc, Liên Xô và các nước Tây Âu.","C. Liên Xô và các nước Đông Nam Á.","D. Trung Quốc và các nước Đông Nam Á."],ans:"A",
+    explain:"Đúng là A. Trong kháng chiến chống Mỹ, Việt Nam trông cậy vào sự viện trợ vũ khí, vật chất của <strong>Trung Quốc, Liên Xô và các nước XHCN</strong> (Ba Lan, Cu-ba, Tiệp Khắc...). Tây Âu (B) và Đông Nam Á (C,D) không phải đối tác chiến lược thời kỳ này."},
+   {num:33,q:"Chủ trương đối ngoại nào sau đây được Việt Nam vận dụng trong cuộc kháng chiến chống Mỹ?",opts:["A. Ngoại giao đi trước, quân sự hỗ trợ.","B. Phối hợp mặt trận chính diện và sau lưng địch.","C. Kết hợp đấu tranh quân sự với đấu tranh vũ trang.","D. Vừa đánh vừa đàm, vừa đàm vừa đánh."],ans:"D",
+    explain:"Đúng là D. Chủ trương nổi tiếng của ngoại giao Việt Nam trong kháng chiến chống Mỹ là <strong>'vừa đánh vừa đàm, vừa đàm vừa đánh'</strong> — kết hợp đấu tranh quân sự trên chiến trường với đàm phán ngoại giao (điển hình là Hội nghị Paris 1968–1973)."},
+  ],
+  ds: [
+   {num:17,quote:"\"Tàn sát người dân chịu sưu dịch, trấn áp nho sĩ, phá các trường học và các hội buôn được thành lập theo đúng lời chỉ dẫn của Chính phủ, đó là những biện pháp mà Nhà nước Đông Dương đã thực hiện sau các cuộc biểu tình...\" (Phan Châu Trinh, Điều trần gửi Hội nhân quyền, Pa-ri, 1912)",
+    items:[
+     {letter:"a",text:"Chính quyền Pháp ở Đông Dương đã thi hành những chính sách không phù hợp sau cuộc biểu tình của nhân dân Trung Kì.",ans:"T",explain:"<strong>Đúng.</strong> Tư liệu nêu rõ 'Nhà nước Đông Dương đã thực hiện' tàn sát, trấn áp, phá trường học sau biểu tình → đây là những 'chính sách không phù hợp' so với lời chỉ dẫn của Chính phủ Pháp. Phan Châu Trinh dùng điều này để tố cáo chính quyền thuộc địa."},
+     {letter:"b",text:"Chính quyền Pháp ở Đông Dương đã có dấu hiệu đi ngược lại với chính sách của Chính phủ Pháp.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu chỉ nói Nhà nước Đông Dương hành động 'ngược lại lời chỉ dẫn của Chính phủ' nhưng KHÔNG khẳng định đây là 'dấu hiệu đi ngược' có chủ ý chính sách — đây chỉ là lập luận Phan Châu Trinh dùng để tố cáo, không phải kết luận thực tế."},
+     {letter:"c",text:"Chính phủ Pháp đã chỉ đạo đàn áp các cuộc biểu tình của người dân Việt Nam.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu ghi 'theo đúng lời chỉ dẫn của Chính phủ' là ý chỉ chính sách thuộc địa ban đầu, còn việc đàn áp là do 'Nhà nước Đông Dương' tự ý làm — Phan Châu Trinh dùng cách viết này để vạch mặt chính quyền thuộc địa vi phạm chính sách chính quốc."},
+     {letter:"d",text:"Chính phủ Pháp đã chỉ đạo phá các trường học và hội buôn ở Đông Dương.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu nói 'Nhà nước Đông Dương' (chính quyền thuộc địa) phá trường học — không phải Chính phủ Pháp ở Paris. Đây chính là điểm mấu chốt Phan Châu Trinh muốn tố cáo: chính quyền thuộc địa hành động trái lệnh chính quốc."},
+    ]},
+   {num:18,quote:"\"Sau Cách mạng tháng Tám 1945, chưa có quốc gia nào trên thế giới công nhận nước VNDCCH... đến Hội nghị Giơ-ne-vơ, với bản tham dự của năm cường quốc, bản tuyên bố cuối cùng đã ghi nhận nền độc lập, thống nhất, chủ quyền và toàn vẹn lãnh thổ của Việt Nam, Lào, Cam-pu-chia.\" (Vũ Dương Ninh, 2015)",
+    items:[
+     {letter:"a",text:"Với Hiệp định Giơ-ne-vơ, Việt Nam Dân chủ Cộng hoà đã được công nhận bởi các nước trên thế giới.",ans:"F",explain:"<strong>Sai.</strong> Giơ-ne-vơ chỉ có 'năm cường quốc' (Mỹ, Liên Xô, Anh, Pháp, Trung Quốc) ghi nhận — không phải 'các nước trên thế giới'. Mỹ thậm chí không ký vào bản tuyên bố cuối cùng. Đây là nhận định quá rộng so với nội dung tư liệu."},
+     {letter:"b",text:"Từ sau Hiệp định Giơ-ne-vơ, các nước lớn không còn can thiệp vào Việt Nam.",ans:"F",explain:"<strong>Sai.</strong> Thực tế ngược lại — Mỹ ngay lập tức can thiệp vào miền Nam, dựng lên chính quyền Ngô Đình Diệm, vi phạm Hiệp định. Hiệp định Giơ-ne-vơ không ngăn được sự can thiệp của nước lớn."},
+     {letter:"c",text:"Từ sau Hiệp định Giơ-ne-vơ, các nước Đồng minh đã thiết lập quan hệ ngoại giao với VNDCCH.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu chỉ nói bản tuyên bố 'ghi nhận' độc lập Việt Nam — không có nghĩa là tất cả các nước Đồng minh thiết lập quan hệ ngoại giao. Mỹ không công nhận VNDCCH sau 1954."},
+     {letter:"d",text:"Với Hiệp định Giơ-ne-vơ, vị thế quốc tế của VNDCCH đã được nâng cao.",ans:"T",explain:"<strong>Đúng.</strong> Lần đầu tiên năm cường quốc ngồi vào bàn đàm phán và tuyên bố ghi nhận độc lập, chủ quyền của Việt Nam → đây là sự nâng cao rõ ràng về vị thế quốc tế của VNDCCH, dù Hiệp định có nhiều hạn chế."},
+    ]},
+   {num:19,quote:"\"Về ngoại giao, kiên trì chủ trương ngoại giao với các nước theo nguyên tắc bình đẳng và tương trợ... thuật ngoại giao là làm cho nước mình ít kẻ thù và nhiều bạn đồng minh hơn hết; muốn ngoại giao được thắng lợi là phải biểu dương thực lực.\" (ĐCSĐD, Chỉ thị Kháng chiến kiến quốc, 25-11-1945)",
+    items:[
+     {letter:"a",text:"Chỉ thị nhấn mạnh chủ trương cần bình đẳng với kẻ thù.",ans:"F",explain:"<strong>Sai.</strong> Chỉ thị nêu ngoại giao theo nguyên tắc 'bình đẳng và tương trợ' với <em>các nước</em> nói chung — không phải với 'kẻ thù'. Bình đẳng với kẻ thù là diễn giải sai; đây là nguyên tắc với đối tác, đồng minh tiềm năng."},
+     {letter:"b",text:"Chỉ thị khẳng định ngoại giao thắng lợi dẫn đến lực lượng và sức mạnh được bộc lộ và tăng cường.",ans:"F",explain:"<strong>Sai.</strong> Chỉ thị nói ngược lại: phải <em>biểu dương thực lực trước</em> thì ngoại giao mới thắng lợi — tức thực lực là điều kiện của thắng lợi ngoại giao, không phải kết quả sau đó."},
+     {letter:"c",text:"Đảng Cộng sản Đông Dương chủ trương thực hiện phương châm ngoại giao 'thêm bạn bớt thù'.",ans:"T",explain:"<strong>Đúng.</strong> 'Làm cho nước mình ít kẻ thù và nhiều bạn đồng minh hơn hết' chính là phương châm <strong>'thêm bạn bớt thù'</strong> — đây là tư tưởng ngoại giao cốt lõi của ĐCSĐD từ 1945."},
+     {letter:"d",text:"Chỉ thị xác định việc biểu dương thực lực có vai trò quyết định thắng lợi trong đấu tranh ngoại giao.",ans:"T",explain:"<strong>Đúng.</strong> Câu 'muốn ngoại giao được thắng lợi là phải biểu dương thực lực' → thực lực (sức mạnh quân sự, kinh tế, đoàn kết...) là <strong>yếu tố quyết định</strong> thắng lợi ngoại giao. Đây là nguyên tắc quan trọng trong tư tưởng đối ngoại VN."},
+    ]},
+   {num:27,quote:"\"Chính phủ Pháp công nhận nước VNDCCH là một quốc gia tự do có Chính phủ của mình, Nghị viện của mình, quân đội của mình, tài chính của mình, và là một phần tử trong Liên bang Đông Dương, ở trong khối Liên hiệp Pháp.\" (Khoản 1, Hiệp định Sơ bộ Việt–Pháp, 6-3-1946)",
+    items:[
+     {letter:"a",text:"Pháp công nhận nền độc lập, tự do của VNDCCH.",ans:"F",explain:"<strong>Sai.</strong> Hiệp định chỉ công nhận VN là 'quốc gia <strong>tự do</strong>' — <em>không phải</em> 'độc lập'. VN vẫn nằm trong Liên bang Đông Dương và Liên hiệp Pháp → chưa độc lập hoàn toàn. Đây là sự khác biệt quan trọng về ngôn từ pháp lý."},
+     {letter:"b",text:"Pháp công nhận VNDCCH là quốc gia tự do.",ans:"T",explain:"<strong>Đúng.</strong> Văn bản ghi rõ: 'Chính phủ Pháp công nhận nước VNDCCH là một <strong>quốc gia tự do</strong>' — đây là sự công nhận về địa vị pháp lý quan trọng, dù VN vẫn trong Liên hiệp Pháp."},
+     {letter:"c",text:"Pháp thừa nhận nền độc lập, tự do của VNDCCH, thuộc khối Liên hiệp Pháp.",ans:"F",explain:"<strong>Sai.</strong> Như ý a — Pháp công nhận 'tự do' chứ <em>không phải</em> 'độc lập'. Độc lập và tự do là hai khái niệm khác nhau. Hiệp định dùng từ 'tự do' có chủ ý, tránh dùng 'độc lập' vốn hàm nghĩa tách khỏi khối Pháp."},
+     {letter:"d",text:"Pháp công nhận VNDCCH là quốc gia trong khối Liên hiệp Pháp.",ans:"F",explain:"<strong>Sai.</strong> VN 'là một phần tử trong Liên bang Đông Dương, <em>ở trong</em> khối Liên hiệp Pháp' — đây là <em>hạn chế</em> đi kèm, không phải nội dung công nhận chủ yếu. Nội dung chính là 'quốc gia tự do', còn thuộc Liên hiệp Pháp là điều kiện ràng buộc."},
+    ]},
+   {num:29,quote:"\"Trong quan hệ của các nước với Cam-pu-chia, Lào, và Việt Nam, mỗi thành viên của Hội nghị Giơ-ne-vơ cam kết tôn trọng chủ quyền, nền độc lập, sự thống nhất, và sự toàn vẹn lãnh thổ...\" (Bản tuyên bố cuối cùng HN Giơ-ne-vơ, 21-7-1954)",
+    items:[
+     {letter:"a",text:"Chủ quyền, độc lập, thống nhất và tự do lãnh thổ của Việt Nam được đề cao.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu nêu 'toàn vẹn lãnh thổ' — <em>không phải</em> 'tự do lãnh thổ'. Đây là thay đổi từ ngữ quan trọng làm thay đổi nghĩa. 'Toàn vẹn lãnh thổ' và 'tự do lãnh thổ' là hai khái niệm khác nhau."},
+     {letter:"b",text:"Các nước thành viên cam kết tôn trọng những quyền cơ bản của các nước Đông Dương.",ans:"T",explain:"<strong>Đúng.</strong> Tư liệu ghi các thành viên 'cam kết tôn trọng chủ quyền, nền độc lập, sự thống nhất, và sự toàn vẹn lãnh thổ' → đây chính là những <strong>quyền cơ bản</strong> của các quốc gia có chủ quyền."},
+     {letter:"c",text:"Các nước thành viên bảo đảm về lâu dài sự thống nhất và toàn vẹn lãnh thổ của các nước Đông Dương.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu chỉ nói 'cam kết tôn trọng' — <em>không phải</em> 'bảo đảm về lâu dài'. 'Tôn trọng' và 'bảo đảm' là hai mức độ cam kết khác nhau; ngoài ra thực tế sau 1954 Mỹ đã vi phạm cam kết này."},
+     {letter:"d",text:"Các nước thành viên chính thức tuyên bố không xâm lược hoặc can thiệp vào công việc nội bộ của Việt Nam.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu nói 'kiềm chế khỏi sự gây cản trở vào công việc nội bộ' — <em>không phải</em> 'chính thức tuyên bố không xâm lược'. Đây là cam kết không can thiệp, không phải tuyên bố không xâm lược (là cam kết mạnh hơn)."},
+    ]},
+   {num:32,quote:"\"Điều 1. Hoa Kỳ và các nước khác tôn trọng độc lập, chủ quyền, thống nhất, toàn vẹn lãnh thổ... Điều 2. Một cuộc ngưng bắn sẽ được thực hiện trên khắp miền Nam Việt Nam kể từ 24 giờ (GMT), ngày 27-1-1973... Hoa Kỳ sẽ chấm dứt mọi hoạt động quân sự chống lãnh thổ VNDCCH...\" (Hiệp định Pa-ri, 27-1-1973)",
+    items:[
+     {letter:"a",text:"Mỹ cam kết tôn trọng một số quyền cơ bản của Việt Nam như trong nội dung của Hiệp định Giơ-ne-vơ năm 1954.",ans:"F",explain:"<strong>Sai.</strong> Điều 1 nói Mỹ tôn trọng 'độc lập, chủ quyền, thống nhất, toàn vẹn lãnh thổ cả nước Việt Nam <em>như</em> Hiệp định Giơ-ne-vơ đã công nhận' — đây là <em>toàn bộ các quyền cơ bản</em>, không phải 'một số'. Từ 'một số' làm sai nội dung."},
+     {letter:"b",text:"Mỹ cam kết ngừng bắn trên toàn lãnh thổ Việt Nam và ngừng chống phá VNDCCH.",ans:"T",explain:"<strong>Đúng.</strong> Điều 2: ngưng bắn 'trên khắp miền Nam Việt Nam' + 'chấm dứt mọi hoạt động quân sự chống lãnh thổ VNDCCH' → hai cam kết này kết hợp bao phủ 'toàn lãnh thổ Việt Nam' và ngừng chống phá miền Bắc."},
+     {letter:"c",text:"Mỹ rút toàn bộ quân đội và cố vấn ngay lập tức khỏi Việt Nam.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu không đề cập đến việc rút quân ngay lập tức. Hiệp định Pa-ri quy định rút quân trong 60 ngày sau khi ký, không phải 'ngay lập tức'. Đây là điểm khác biệt quan trọng trong nội dung Hiệp định."},
+     {letter:"d",text:"Các bên sẽ thực hiện ngừng bắn trên toàn miền Nam Việt Nam.",ans:"F",explain:"<strong>Sai.</strong> Điều 2 chỉ nói ngưng bắn 'trên khắp miền Nam Việt Nam' từ 27/1/1973 — nhưng đây là <em>lệnh ngưng bắn</em> do Mỹ và VNDCCH thoả thuận, không phải tất cả 'các bên' (bao gồm cả VNCH và CMLTCHMNVN). Nội dung tư liệu không dùng từ 'các bên'."},
+    ]},
+  ]
+ },
+ 2: {
+  mc: [
+   {num:1,q:"Nội dung chủ yếu của hoạt động đối ngoại Việt Nam giai đoạn 1975–1985 là gì?",opts:["A. Đẩy mạnh hoạt động ngoại giao hoà bình, thúc đẩy chính sách đổi mới.","B. Đẩy mạnh hoạt động ngoại giao hoà bình, chống bao vây, cấm vận từ bên ngoài.","C. Đẩy mạnh hoạt động ngoại giao hoà bình, hội nhập mạnh mẽ vào cộng đồng quốc tế.","D. Phát triển quan hệ với các nước láng giềng, xúc tiến việc gia nhập ASEAN."],ans:"B",
+    explain:"Đúng là B. 1975–1985 Việt Nam bị bao vây, cấm vận (Mỹ duy trì cấm vận, xung đột biên giới Tây Nam và phía Bắc). Nhiệm vụ đối ngoại chủ yếu là <strong>đẩy mạnh ngoại giao hoà bình và chống bao vây, cấm vận</strong>. Đổi mới (A) chưa diễn ra; hội nhập mạnh (C) là sau 1986."},
+   {num:2,q:"Hoạt động đối ngoại chủ yếu của Việt Nam trong những năm 1975–1985 đã nhận được sự giúp đỡ to lớn của",opts:["A. Liên Xô.","B. Nhật Bản.","C. Mỹ.","D. Liên minh châu Âu."],ans:"A",
+    explain:"Đúng là A. Giai đoạn 1975–1985, <strong>Liên Xô</strong> là đối tác và người bảo trợ lớn nhất của Việt Nam. Ta ký Hiệp ước Hữu nghị với Liên Xô (1978), gia nhập SEV (1978) và nhận viện trợ kinh tế, quân sự lớn. Mỹ đang cấm vận; EU chưa thành lập."},
+   {num:3,q:"Với việc bình thường hoá ngoại giao với Trung Quốc (1991) và Mỹ (1995), Việt Nam đã thành công trong việc",opts:["A. củng cố quan hệ với các cường quốc.","B. mở đường cho việc gia nhập Liên hợp quốc.","C. mở rộng hoạt động đối ngoại thời kì Đổi mới.","D. phá thế bao vây, cấm vận."],ans:"D",
+    explain:"Đúng là D. Bình thường hoá với TQ (1991) và Mỹ (1995) là hai bước quan trọng nhất để <strong>phá thế bao vây, cấm vận</strong> từ bên ngoài vốn kìm hãm phát triển kinh tế. Việt Nam vào LHQ từ 1977 (B); mở rộng đối ngoại (C) là kết quả, không phải mục tiêu trực tiếp."},
+   {num:4,q:"Quá trình đàm phán bình thường hoá quan hệ giữa Việt Nam và Mỹ đã diễn ra từ",opts:["A. cuối những năm 60 của thế kỉ XX.","B. đầu những năm 80 của thế kỉ XX.","C. đầu những năm 90 của thế kỉ XX.","D. cuối những năm 70 của thế kỉ XX."],ans:"C",
+    explain:"Đáp án C. Lưu ý: đàm phán có từ 1977 (cuối thập 70), nhưng bị gián đoạn do chiến tranh biên giới. <strong>Quá trình đàm phán chính thức và thực chất</strong> tái khởi động vào <strong>đầu những năm 90</strong> (1991 nối lại đàm phán, 1994 Mỹ bãi bỏ cấm vận, 1995 bình thường hoá). Đây là đáp án theo SGK."},
+   {num:5,q:"Nội dung nào sau đây phản ánh việc Việt Nam đẩy mạnh hợp tác toàn diện với Liên Xô và các nước XHCN?",opts:["A. Việt Nam thúc đẩy quan hệ hợp tác với Lào và Cam-pu-chia.","B. Việt Nam ký Hiệp ước hữu nghị và hợp tác với Liên Xô (1978) và bình thường hoá quan hệ với Trung Quốc (1991).","C. Việt Nam ký Hiệp ước hữu nghị và hợp tác với Liên Xô và gia nhập Hội đồng tương trợ kinh tế (SEV).","D. Việt Nam gia nhập SEV và bình thường hoá quan hệ với Trung Quốc (1991)."],ans:"C",
+    explain:"Đúng là C. Hai nội dung cốt lõi thể hiện 'hợp tác toàn diện với Liên Xô': <strong>Hiệp ước Hữu nghị VN–Liên Xô (1978)</strong> và <strong>gia nhập SEV (1978)</strong>. Bình thường hoá với TQ (1991) là bước sau, trong giai đoạn Đổi mới, không thuộc hợp tác với khối XHCN."},
+   {num:6,q:"Sự kiện nào sau đây cho thấy thành công của Việt Nam trong việc thúc đẩy hoạt động đối ngoại ở Đông Nam Á?",opts:["A. Việt Nam trở thành thành viên thứ 7 của ASEAN.","B. Việt Nam bình thường hoá quan hệ với Trung Quốc.","C. Việt Nam đảm nhận vai trò Chủ tịch ASEAN liên tục trong 5 năm.","D. Hoà bình được lập lại ở Cam-pu-chia."],ans:"A",
+    explain:"Đúng là A. 28/7/1995, Việt Nam gia nhập ASEAN với tư cách <strong>thành viên thứ 7</strong> — đây là thành công nổi bật của đối ngoại ở Đông Nam Á, đánh dấu hội nhập khu vực. BT hóa với TQ (B) là quan hệ song phương. Hòa bình Campuchia (D) là điều kiện, không phải kết quả của đối ngoại Đông Nam Á."},
+   {num:7,q:"Tính đến năm 2023, Việt Nam đã thiết lập quan hệ đối tác chiến lược toàn diện với các nước",opts:["A. Trung Quốc, Liên bang Nga, Ấn Độ, Hàn Quốc, Mỹ, Nhật Bản.","B. Lào, Liên bang Nga, Ấn Độ, Hàn Quốc, Mỹ, Nhật Bản.","C. Cu-ba, Liên bang Nga, Ấn Độ, Hàn Quốc, Mỹ, Nhật Bản.","D. Lào, Liên bang Nga, Ấn Độ, Hàn Quốc, Cu-ba, Nhật Bản."],ans:"A",
+    explain:"Đúng là A. Đến 2023, Việt Nam có 6 đối tác chiến lược toàn diện là: <strong>Trung Quốc, Nga, Ấn Độ, Hàn Quốc, Mỹ (2023), Nhật Bản (2023)</strong>. Lào và Cu-ba là đối tác đặc biệt (khác cấp độ). Đây là cấp quan hệ cao nhất trong hệ thống đối tác của Việt Nam."},
+   {num:8,q:"Nội dung mới về hoạt động đối ngoại của Việt Nam trong những thập kỉ đầu thế kỉ XXI là",opts:["A. tham gia ASEAN, thúc đẩy hoạt động đối ngoại ở Đông Nam Á.","B. mở rộng sang các lĩnh vực như: giao lưu văn hoá, hỗ trợ nhân đạo, cứu hộ thiên tai.","C. thiết lập và mở rộng quan hệ hợp tác với nhiều đối tác khu vực và quốc tế.","D. đẩy mạnh hợp tác toàn diện với Liên Xô và các nước xã hội chủ nghĩa."],ans:"C",
+    explain:"Đúng là C. Nội dung MỚI đặc trưng của đối ngoại đầu TK XXI là <strong>mở rộng quan hệ đa tầng nấc với nhiều đối tác</strong> (đối tác chiến lược, toàn diện...). Tham gia ASEAN (A) là 1995; giao lưu văn hóa, nhân đạo (B) là bổ sung. Liên Xô (D) đã tan rã 1991."},
+   {num:12,q:"Một trong những hoạt động đối ngoại của Việt Nam trong giai đoạn 1975–1985 là",opts:["A. thành lập các tổ chức thương mại khu vực và quốc tế.","B. đấu tranh chống chính sách bao vây, cấm vận từ bên ngoài.","C. tham gia tích cực các diễn đàn của tổ chức ASEAN.","D. đẩy mạnh các hoạt động bảo vệ môi trường và hỗ trợ nhân đạo."],ans:"B",
+    explain:"Đúng là B. Hoạt động tiêu biểu 1975–1985: <strong>đấu tranh chống bao vây, cấm vận</strong> (Mỹ cấm vận, Trung Quốc và phương Tây cô lập). VN vào ASEAN 1995 (C); bảo vệ môi trường (D) là thế kỷ XXI."},
+   {num:13,q:"Trong giai đoạn 1975–1985, Việt Nam đẩy mạnh hợp tác toàn diện với",opts:["A. Liên Xô, Trung Quốc và các nước Đông Nam Á.","B. Liên Xô, Cam-pu-chia và các nước ASEAN.","C. Liên Xô, Trung Quốc và các nước Đông Âu.","D. Liên Xô và các nước xã hội chủ nghĩa."],ans:"D",
+    explain:"Đúng là D. 1975–1985 Việt Nam chủ yếu hợp tác với <strong>Liên Xô và khối XHCN</strong> (ký Hiệp ước 1978, vào SEV). Quan hệ với TQ xấu đi nghiêm trọng (Trung Quốc tấn công biên giới 1979). Đáp án D chính xác nhất cho giai đoạn này."},
+   {num:14,q:"Nội dung nào sau đây KHÔNG phản ánh đúng về hoạt động đối ngoại của Việt Nam từ năm 1986 đến nay?",opts:["A. Phá thế bao vây, cấm vận.","B. Thiết lập và mở rộng quan hệ hợp tác với nhiều đối tác.","C. Gia nhập và đóng góp tích cực đối với các tổ chức, diễn đàn quốc tế.","D. Việt Nam trở thành thành viên chủ lực nhất trong tổ chức ASEAN."],ans:"D",
+    explain:"Đúng là D (không đúng). Việt Nam là thành viên tích cực của ASEAN nhưng <strong>không phải 'chủ lực nhất'</strong> — ASEAN có nhiều thành viên lớn như Indonesia, Thái Lan, Singapore... Đây là cách diễn đạt phóng đại, không có cơ sở thực tế."},
+   {num:15,q:"Hoạt động đối ngoại của Việt Nam từ năm 1986 đến nay đạt được nhiều kết quả và đột phá lớn trong thời gian nào?",opts:["A. Đầu những năm 90 của thế kỉ XX.","B. Cuối những năm 80 của thế kỉ XX.","C. Cuối những năm 90 của thế kỉ XX.","D. Thập kỉ đầu của thế kỉ XXI."],ans:"D",
+    explain:"Đúng là D. Những đột phá lớn nhất gồm: gia nhập ASEAN (1995), bình thường hoá với Mỹ (1995), gia nhập WTO (2007) và đặc biệt là <strong>thập kỷ đầu thế kỷ XXI</strong> với hàng loạt đối tác chiến lược được thiết lập."},
+   {num:16,q:"Sự kiện nào sau đây diễn ra năm 1995?",opts:["A. Việt Nam gia nhập ASEAN.","B. Việt Nam đảm nhiệm vai trò nước Chủ tịch ASEAN.","C. Việt Nam chính thức tham gia Diễn đàn hợp tác Á–Âu.","D. Việt Nam tham gia ký kết Hiệp định hoà bình Pa-ri về Cam-pu-chia."],ans:"A",
+    explain:"Đúng là A. <strong>28/7/1995</strong>: Việt Nam chính thức gia nhập ASEAN với tư cách thành viên thứ 7 tại Hội nghị Ngoại trưởng ASEAN lần thứ 28 tại Brunei. Đây là một trong những sự kiện đối ngoại quan trọng nhất của VN thế kỷ XX."},
+   {num:17,q:"Từ năm 2008 đến năm 2023, Việt Nam đã thiết lập, nâng cấp quan hệ đối tác chiến lược toàn diện với những quốc gia nào?",opts:["A. Trung Quốc, Liên bang Nga, Ấn Độ, Hàn Quốc, Mỹ, Nhật Bản.","B. Trung Quốc, Liên bang Nga, Lào, Hàn Quốc, Mỹ, Nhật Bản.","C. Trung Quốc, Liên bang Nga, Cu-ba, Hàn Quốc, Mỹ, Nhật Bản.","D. Trung Quốc, Liên bang Nga, Ấn Độ, Triều Tiên, Mỹ, Nhật Bản."],ans:"A",
+    explain:"Đúng là A: <strong>TQ (2008), Nga (2012), Ấn Độ (2016), Hàn Quốc (2022), Mỹ (9/2023), Nhật Bản (11/2023)</strong> là 6 nước được nâng lên đối tác chiến lược toàn diện. Lào (B) là đối tác đặc biệt; Cu-ba (C) là quan hệ đoàn kết truyền thống; Triều Tiên (D) không phải đối tác chiến lược toàn diện."},
+   {num:18,q:"Hoạt động đối ngoại của Việt Nam trong những năm gần đây còn gắn liền với",opts:["A. viện trợ không hoàn lại cho các nước phát triển, cứu hộ thiên tai, bảo vệ khí hậu.","B. ứng phó biến đổi thời tiết, cứu hộ tài nguyên môi trường.","C. giao lưu văn hoá, ứng phó biến đổi thời tiết, bảo vệ thảm hoạ.","D. hỗ trợ nhân đạo, cứu hộ thảm hoạ thiên tai, bảo vệ môi trường."],ans:"D",
+    explain:"Đúng là D. Theo SGK, đối ngoại VN hiện nay gắn với <strong>hỗ trợ nhân đạo, cứu hộ thảm họa thiên tai, bảo vệ môi trường, ứng phó biến đổi khí hậu</strong>. Đây là những lĩnh vực phi truyền thống được bổ sung vào hoạt động ngoại giao hiện đại."},
+   {num:19,q:"Hoạt động đối ngoại của Việt Nam trong những năm gần đây tiếp tục đóng vai trò nào sau đây?",opts:["A. Giúp Việt Nam thoát khỏi khủng hoảng kinh tế – văn hoá.","B. Giúp Việt Nam đạt được những thành tựu đột phá về an ninh.","C. Góp phần nâng cao vị thế của Việt Nam trong khu vực và trên thế giới.","D. Đưa Việt Nam chính thức trở thành nước công nghiệp phát triển."],ans:"C",
+    explain:"Đúng là C. Vai trò tổng quát của đối ngoại là <strong>nâng cao vị thế VN</strong> trong khu vực và thế giới. Việt Nam được bầu vào HĐBA LHQ (2008–2009, 2020–2021), đảm nhận Chủ tịch ASEAN (2010, 2020)... VN chưa là nước công nghiệp phát triển (D)."},
+  ],
+  ds: [
+   {num:9,quote:"\"Ngày 3-2-1994, Chính phủ Mỹ tuyên bố bãi bỏ cấm vận đối với Việt Nam... Ngày 11-7-1995, Tổng thống Mỹ tuyên bố chính thức bình thường hoá quan hệ với Việt Nam... Mỹ là nước lớn cuối cùng trên thế giới đã bình thường hoá quan hệ với Việt Nam.\" (Đinh Xuân Lý, 2013)",
+    items:[
+     {letter:"a",text:"Sau sự kiện ngày 11-7-1995, Việt Nam đã có quan hệ bình thường với tất cả các nước lớn trên thế giới.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu viết 'Mỹ là nước lớn <em>cuối cùng</em>' bình thường hoá quan hệ → điều này ngụ ý sau 11/7/1995 VN đã có quan hệ với tất cả nước lớn. Tuy nhiên đây là sự suy luận thêm — tư liệu không khẳng định trực tiếp điều này, nên không thể xác nhận là Đúng hoàn toàn dựa theo nguyên văn tư liệu. Đáp án là Sai."},
+     {letter:"b",text:"Việc Chính phủ Mỹ tuyên bố bãi bỏ cấm vận đối với Việt Nam là một bước ngoặt trong quan hệ Việt–Mỹ.",ans:"T",explain:"<strong>Đúng.</strong> Tư liệu ghi rõ: 'Đây là bước ngoặt quan trọng trong việc điều chỉnh chính sách của Hoa Kỳ đối với Việt Nam, và là bước ngoặt phát triển quan hệ Việt–Mỹ'. → Đây là trích dẫn trực tiếp từ tư liệu."},
+     {letter:"c",text:"Mỹ và Việt Nam trở thành đối tác toàn diện và tin cậy từ sau năm 1995.",ans:"F",explain:"<strong>Sai.</strong> 1995 chỉ là bình thường hoá quan hệ ngoại giao (cấp đại sứ). Quan hệ Đối tác toàn diện chính thức được thiết lập năm <strong>2013</strong>, và Đối tác chiến lược toàn diện năm <strong>2023</strong>. Tư liệu không đề cập 'đối tác toàn diện và tin cậy'."},
+     {letter:"d",text:"Việc Mỹ và Việt Nam mở cửa cơ quan đại diện của nhau đã chính thức đưa quan hệ hai nước bước vào thời kì thân thiện, hợp tác.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu không dùng từ 'thời kì thân thiện, hợp tác'. Việc mở cửa văn phòng đại diện chỉ là bước đầu, chưa phải thiết lập quan hệ đại sứ đầy đủ. 'Bình thường hoá' mới là bước chính thức hơn, còn 'thân thiện, hợp tác' là nhận xét chủ quan không có trong tư liệu."},
+    ]},
+   {num:10,quote:"\"Việt Nam trở thành thành viên đầy đủ của tổ chức ASEAN đánh dấu một bước phát triển mới... tạo thêm thuận lợi cho sự phát triển của Việt Nam trong sự phát triển chung của toàn khu vực... Điều này càng có ý nghĩa vì Việt Nam nằm trong khu vực châu Á–Thái Bình Dương, một khu vực phát triển năng động nhất và đầy hứa hẹn sẽ trở thành trung tâm kinh tế, thương mại của thế giới vào thế kỉ tới.\" (Lưu Văn Lợi, 2004)",
+    items:[
+     {letter:"a",text:"Gia nhập ASEAN sẽ tạo thêm điều kiện thuận lợi cho sự phát triển của Việt Nam.",ans:"T",explain:"<strong>Đúng.</strong> Tư liệu ghi rõ: 'tạo thêm thuận lợi cho sự phát triển của Việt Nam trong sự phát triển chung của toàn khu vực' → đây là xác nhận trực tiếp từ nguồn."},
+     {letter:"b",text:"Châu Á–Thái Bình Dương là trung tâm kinh tế, thương mại của thế giới vào thế kỉ tới.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu viết 'đầy hứa hẹn <em>sẽ trở thành</em>' trung tâm kinh tế — đây là dự báo/kỳ vọng (được viết năm 2004 về 'thế kỷ tới' tức thế kỷ XXI), không phải khẳng định thực tế đã xảy ra. Không thể nói đây là sự thật chắc chắn."},
+     {letter:"c",text:"Việt Nam trở thành thành viên của ASEAN là một sự kiện quan trọng của Việt Nam và của ASEAN.",ans:"T",explain:"<strong>Đúng.</strong> Tư liệu: 'là sự kiện quan trọng <em>cả đối với nước Việt Nam lẫn đối với khu vực</em>' → nói rõ tầm quan trọng với cả VN và ASEAN (khu vực = ASEAN trong ngữ cảnh này)."},
+     {letter:"d",text:"Việt Nam gia nhập ASEAN là sự kiện quan trọng nhất của ASEAN.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu chỉ nói là 'sự kiện quan trọng' — không có từ 'quan trọng nhất'. Việc thêm 'nhất' là sự suy diễn quá mức không có căn cứ trong tư liệu, và thực tế ASEAN có nhiều sự kiện quan trọng khác."},
+    ]},
+   {num:11,quote:"\"Sức mạnh ngoại giao là một dạng 'sức mạnh mềm'... ngoại giao đa phương ngày càng có tầm quan trọng đặc biệt... các nước vừa và nhỏ vẫn có thể tham gia hiệu quả và có vai trò quan trọng trong các tổ chức quốc tế như LHQ, WTO... Đó là kinh nghiệm bổ ích về hoạt động chính trị quốc tế mà Việt Nam có thể tham khảo.\" (Nguyễn Dy Niên, 2009)",
+    items:[
+     {letter:"a",text:"Từ xưa đến nay, hoạt động ngoại giao trên thực tế chỉ bao gồm các quan hệ giữa các quốc gia trong khu vực.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu nêu ngoại giao bao gồm 'các tổ chức liên chính phủ và phi chính phủ, các công ty xuyên quốc gia' — không chỉ là quan hệ giữa các quốc gia trong khu vực. Đây là định nghĩa quá hẹp và sai với thực tế ngoại giao hiện đại."},
+     {letter:"b",text:"Trong thời đại ngày nay, các quốc gia vừa và nhỏ luôn gặp những khó khăn khi tham gia các tổ chức quốc tế.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu nói ngược lại: 'các nước vừa và nhỏ vẫn có thể tham gia <em>hiệu quả</em> và có <em>vai trò quan trọng</em>' trong LHQ, WTO... → nước vừa và nhỏ có cơ hội, không phải luôn gặp khó khăn."},
+     {letter:"c",text:"Ngoại giao góp phần nâng cao vị thế đất nước, thậm chí có thể đi trước mở đường cho đấu tranh chính trị và quân sự.",ans:"T",explain:"<strong>Đúng.</strong> Tư liệu: 'ngoại giao đóng vai trò quan trọng tạo dựng thêm thế và lực của đất nước'. Kết hợp với kinh nghiệm lịch sử VN (ngoại giao đi trước), đây là nhận định đúng được hàm ý trong tư liệu."},
+     {letter:"d",text:"Bài học kinh nghiệm cho Việt Nam trong hoạt động đối ngoại là phải tích cực, chủ động, theo sát tình hình, tận dụng thời cơ để nâng cao vị thế.",ans:"T",explain:"<strong>Đúng.</strong> Tư liệu kết luận: 'kinh nghiệm bổ ích về hoạt động chính trị quốc tế mà Việt Nam có thể tham khảo' — hàm ý VN cần chủ động, tích cực tham gia tổ chức quốc tế để nâng cao vị thế. Đây là suy luận logic, đúng và phù hợp với tinh thần tư liệu."},
+    ]},
+  ]
+ },
+ 3: {
+  mc: [
+   {num:1,q:"Nội dung nào sau đây là một trong những yếu tố ảnh hưởng đến cuộc đời và sự nghiệp cách mạng của Hồ Chí Minh?",opts:["A. Đất nước bị mất độc lập, sự nghiệp cứu nước rơi vào khủng hoảng, bế tắc.","B. Phong trào yêu nước chống Pháp theo khuynh hướng tư sản đã chấm dứt.","C. Phong trào đấu tranh chống Pháp và phong kiến tay sai đã ngừng hoạt động.","D. Nhân dân không ủng hộ cuộc đấu tranh chống Pháp của các sĩ phu phong kiến."],ans:"A",
+    explain:"Đúng là A. Yếu tố lớn nhất ảnh hưởng đến con đường của Hồ Chí Minh: <strong>đất nước bị thực dân Pháp đô hộ, các phong trào cứu nước thất bại liên tiếp, rơi vào bế tắc</strong>. Chính bế tắc này thôi thúc Người tìm con đường mới. B, C, D là các nhận định sai về thực tế lịch sử."},
+   {num:2,q:"Từ cuối thế kỉ XIX đến đầu thế kỉ XX, tình hình Việt Nam có đặc điểm nổi bật nào sau đây?",opts:["A. Thực dân Pháp câu kết với tay sai mở đầu cuộc chiến tranh xâm lược.","B. Mâu thuẫn giữa nông dân với địa chủ phong kiến, tay sai là cơ bản nhất.","C. Hai khuynh hướng cứu nước: phong kiến và dân chủ tư sản cùng xuất hiện.","D. Phong trào chống thực dân Pháp dưới ngọn cờ phong kiến đều bị thất bại."],ans:"C",
+    explain:"Đúng là C. Đặc điểm nổi bật giai đoạn này: xuất hiện <strong>hai khuynh hướng</strong> — phong kiến (Phan Đình Phùng, Hoàng Hoa Thám) và dân chủ tư sản (Phan Bội Châu, Phan Châu Trinh) — cùng song song tồn tại nhưng đều thất bại, dẫn đến khủng hoảng đường lối cứu nước."},
+   {num:3,q:"Trước khi ra đi tìm đường cứu nước (1911), Hồ Chí Minh đã được kế thừa truyền thống nào sau đây của quê hương Nghệ An và gia đình?",opts:["A. Truyền thống yêu nước chống Mỹ xâm lược.","B. Truyền thống hiếu học và đoàn kết chống ngoại xâm.","C. Truyền thống hiếu học đặt lên trên việc cứu nước.","D. Truyền thống khoa bảng, sự chịu khó và cam chịu."],ans:"B",
+    explain:"Đúng là B. Nghệ An và gia đình Hồ Chí Minh có truyền thống <strong>hiếu học và chống ngoại xâm</strong> (Nghệ An là quê hương nhiều phong trào yêu nước; thân phụ Nguyễn Sinh Sắc là tấm gương học tập và tinh thần yêu nước). A sai (1911 chưa có Mỹ xâm lược); C và D là diễn đạt sai lệch."},
+   {num:4,q:"Từ năm 1890 đến năm 1911, Nguyễn Tất Thành có hoạt động tiêu biểu nào sau đây?",opts:["A. Theo học tại Trường Quốc Học Huế.","B. Hoạt động yêu nước ở Liên Xô.","C. Tham dự Hội nghị Véc-xai ở Pháp.","D. Dạy học ở Huế và Phan Thiết."],ans:"D",
+    explain:"Đúng là D. 1890–1911: Nguyễn Tất Thành học Quốc Học Huế, rồi <strong>dạy học tại Trường Dục Thanh (Phan Thiết, 1910)</strong> trước khi vào Sài Gòn và xuất dương 1911. Hội nghị Véc-xai (C) là 1919; hoạt động ở Liên Xô (B) là 1923–1924."},
+   {num:5,q:"Trong quá trình hoạt động yêu nước và cách mạng, Hồ Chí Minh có nhiều tên gọi khác nhau, nhưng KHÔNG có tên gọi nào sau đây?",opts:["A. Nguyễn Tất Thành.","B. Văn Ba.","C. Nguyễn Ái Quốc.","D. Nguyễn Sinh Khiêm."],ans:"D",
+    explain:"Đúng là D. <strong>Nguyễn Sinh Khiêm</strong> là tên anh trai của Hồ Chí Minh, không phải tên của Người. Hồ Chí Minh có nhiều tên: Nguyễn Sinh Cung (tên thời thơ ấu), Nguyễn Tất Thành (A), Văn Ba (B - tên dùng khi làm phụ bếp trên tàu), Nguyễn Ái Quốc (C)..."},
+   {num:6,q:"Từ năm 1911 đến năm 1919, Nguyễn Tất Thành có hoạt động tiêu biểu nào sau đây?",opts:["A. Tham gia sáng lập Đảng Cộng sản Pháp.","B. Thành lập Thanh niên Cộng sản đoàn.","C. Tìm hiểu thực tiễn các nước trên thế giới.","D. Sáng lập Đảng Cộng sản Việt Nam."],ans:"C",
+    explain:"Đúng là C. 1911–1919: Nguyễn Tất Thành bôn ba nhiều châu lục (Pháp, Anh, Mỹ, châu Phi...) làm nhiều nghề để sống và <strong>tìm hiểu thực tiễn thế giới</strong>. Sáng lập ĐCSP (A) là 1920; ĐCSVN (D) là 1930."},
+   {num:7,q:"Hoạt động của Nguyễn Ái Quốc–Hồ Chí Minh trong những năm 1920–1930 KHÔNG có nội dung nào sau đây?",opts:["A. Bồi dưỡng cán bộ cách mạng và sáng lập Đảng Cộng sản Việt Nam.","B. Lựa chọn con đường cứu nước theo khuynh hướng cách mạng vô sản.","C. Trở về nước và trực tiếp lãnh đạo cuộc vận động giải phóng dân tộc.","D. Chuẩn bị các điều kiện cho việc thành lập Đảng Cộng sản Việt Nam."],ans:"C",
+    explain:"Đúng là C (KHÔNG đúng). Giai đoạn 1920–1930 Nguyễn Ái Quốc hoạt động chủ yếu ở nước ngoài (Pháp, Liên Xô, Trung Quốc). Người <strong>chưa trở về nước</strong> lãnh đạo trực tiếp trong giai đoạn này — điều đó diễn ra sau 1941 khi Người về Pắc Bó."},
+   {num:8,q:"Từ năm 1930 đến năm 1940, Nguyễn Ái Quốc chủ yếu hoạt động ở quốc gia nào sau đây?",opts:["A. Liên Xô.","B. Trung Quốc.","C. Triều Tiên.","D. Pháp."],ans:"B",
+    explain:"Đúng là B. Sau khi lập ĐCSVN (1930), Nguyễn Ái Quốc hoạt động nhiều năm ở <strong>Trung Quốc</strong> (Hong Kong, các tỉnh phía nam) — bị bắt ở Hong Kong (1931–1933), rồi sang Liên Xô (1934–1938), sau đó quay lại Trung Quốc (1938–1941) trước khi về nước."},
+   {num:9,q:"Nội dung nào sau đây ghi nhận Hồ Chí Minh là nhà lãnh đạo chủ chốt trong lịch sử dân tộc (từ năm 1945 đến năm 1969)?",opts:["A. Chỉ huy các chiến dịch trong suốt cuộc kháng chiến chống Mỹ.","B. Là Chủ tịch nước và giữ nhiều chức vụ trong Đảng, chính quyền.","C. Trực tiếp chỉ đạo cuộc Tổng tiến công và nổi dậy Xuân 1975.","D. Kết nối phong trào cách mạng Việt Nam với cách mạng thế giới."],ans:"B",
+    explain:"Đúng là B. Từ 1945–1969, Hồ Chí Minh là <strong>Chủ tịch nước, Chủ tịch Đảng, Chủ tịch Chính phủ</strong> — vai trò lãnh đạo chủ chốt được thể hiện qua chức vụ. C sai (1975 Người đã mất năm 1969); A quá cụ thể và không chính xác."},
+   {num:10,q:"Trong cuộc kháng chiến chống thực dân Pháp (1945–1954), Chủ tịch Hồ Chí Minh đã",opts:["A. có nhiều hoạt động trong xây dựng và bảo vệ chế độ mới.","B. trực tiếp chỉ đạo cuộc Tổng tiến công và nổi dậy ở Việt Bắc.","C. tổ chức Đại hội đại biểu toàn quốc lần thứ III của Đảng.","D. tham gia công cuộc xây dựng chủ nghĩa xã hội ở miền Bắc."],ans:"A",
+    explain:"Đúng là A. 1945–1954: Hồ Chí Minh lãnh đạo <strong>xây dựng và bảo vệ chế độ mới</strong> — đọc Tuyên ngôn Độc lập, lãnh đạo kháng chiến, chủ trì Đại hội Đảng lần II... B sai (Tổng tiến công Việt Bắc không đúng); C và D là giai đoạn sau 1954."},
+   {num:14,q:"Cuối thế kỉ XIX, hoàn cảnh nào sau đây của đất nước đã ảnh hưởng đến cuộc đời và sự nghiệp của Hồ Chí Minh?",opts:["A. Thực dân Pháp đã đặt được ách cai trị trên toàn lãnh thổ Việt Nam.","B. Phong trào đấu tranh theo khuynh hướng vô sản diễn ra rộng khắp.","C. Cách mạng Việt Nam đi theo con đường cách mạng vô sản.","D. Thực dân Pháp hoàn thành cuộc khai thác thuộc địa lần thứ nhất."],ans:"A",
+    explain:"Đúng là A. Cuối thế kỷ XIX: Pháp <strong>hoàn thành xâm lược và đặt ách cai trị trên toàn Việt Nam</strong> (sau Hiệp ước Patenôtre 1884). Đây là bối cảnh trực tiếp ảnh hưởng đến tuổi thơ và ý chí của Hồ Chí Minh. B và C là giai đoạn sau; D là đầu thế kỷ XX."},
+   {num:15,q:"Nội dung nào sau đây KHÔNG đúng về Nghệ An — quê hương của Hồ Chí Minh?",opts:["A. Diễn ra nhiều phong trào đấu tranh chống thực dân Pháp.","B. Cư dân có truyền thống hiếu học và khoa bảng.","C. Trung tâm công nghiệp lớn nhất cả nước.","D. Là nơi sản sinh ra nhiều danh nhân."],ans:"C",
+    explain:"Đúng là C (không đúng). Nghệ An là tỉnh miền Trung, không phải <strong>trung tâm công nghiệp lớn nhất cả nước</strong>. Nghệ An nổi tiếng về truyền thống yêu nước (A), hiếu học (B) và sản sinh nhiều danh nhân như Nguyễn Du, Hồ Chí Minh, Phan Bội Châu (D)."},
+   {num:16,q:"Nội dung nào sau đây đúng về hoàn cảnh gia đình đã ảnh hưởng đến cuộc đời và sự nghiệp của Hồ Chí Minh?",opts:["A. Thân mẫu từng thi đỗ cử nhân tại trường thi Nghệ An.","B. Thân phụ là một tấm gương sáng về ý chí vượt khó.","C. Thân phụ là người tham gia khởi xướng phong trào Đông du.","D. Thân phụ đã từng tích cực tham gia cuộc vận động Duy tân."],ans:"B",
+    explain:"Đúng là B. Cụ Nguyễn Sinh Sắc (thân phụ) xuất thân nghèo khó nhưng nỗ lực học đỗ phó bảng — <strong>là tấm gương về ý chí vượt khó</strong>, đồng thời có tinh thần yêu nước. A sai (thân mẫu không thi cử nhân); C sai (Đông du là Phan Bội Châu); D chưa có bằng chứng rõ ràng."},
+   {num:17,q:"Năm 1910, Nguyễn Tất Thành đã dạy học tại",opts:["A. Trường Tiểu học Pháp–Việt Đông Ba.","B. Trường Quốc Học Huế.","C. Trường Dục Thanh ở Phan Thiết.","D. Trường làng tại Nghệ An."],ans:"C",
+    explain:"Đúng là C. Năm 1910, Nguyễn Tất Thành dạy học tại <strong>Trường Dục Thanh</strong> (Phan Thiết, Bình Thuận) — một trường do các nhà yêu nước lập. Đây là nơi Người dừng chân trước khi vào Sài Gòn và xuất dương năm 1911."},
+   {num:18,q:"Từ năm 1911 đến năm 1919, Nguyễn Ái Quốc có hoạt động tiêu biểu nào sau đây?",opts:["A. Gửi bản Yêu sách của nhân dân An Nam đến Hội nghị Véc-xai.","B. Tham gia hoạt động trong Quốc tế Cộng sản.","C. Tham gia sáng lập Đảng Cộng sản Pháp.","D. Bỏ phiếu tán thành Quốc tế thứ nhất."],ans:"A",
+    explain:"Đúng là A. Tháng 6/1919, tại Hội nghị Véc-xai, Nguyễn Ái Quốc thay mặt nhóm người VN yêu nước <strong>gửi Bản Yêu sách 8 điểm</strong> đòi quyền cho người Việt. Đây là hoạt động tiêu biểu giai đoạn 1911–1919. Sáng lập ĐCSP (C) là 12/1920."},
+   {num:19,q:"Từ năm 1920, con đường cứu nước giải phóng dân tộc Việt Nam theo Nguyễn Ái Quốc lựa chọn là",opts:["A. theo khuynh hướng dân chủ tư sản.","B. đấu tranh vũ trang kết hợp bãi công, biểu tình.","C. kêu gọi sự ủng hộ từ các nước khác trên thế giới.","D. theo khuynh hướng cách mạng vô sản."],ans:"D",
+    explain:"Đúng là D. Sau khi đọc Luận cương Lê-nin (7/1920) và bỏ phiếu gia nhập Quốc tế III (12/1920), Nguyễn Ái Quốc lựa chọn con đường <strong>cách mạng vô sản</strong> — gắn giải phóng dân tộc với giải phóng giai cấp, dưới sự lãnh đạo của Đảng Cộng sản. Đây là bước ngoặt quyết định."},
+   {num:20,q:"Hội nghị lần thứ 15 Ban Chấp hành Trung ương Đảng Lao động Việt Nam (1-1959) do Chủ tịch Hồ Chí Minh chủ trì đã xác định phương hướng cơ bản của cách mạng miền Nam là gì?",opts:["A. Đi từ khởi nghĩa từng phần tiến lên Tổng khởi nghĩa.","B. Chống Mỹ trên hai mặt trận là quân sự và ngoại giao.","C. Khởi nghĩa giành chính quyền về tay nhân dân.","D. Tiến hành cải cách điền địa ở vùng giải phóng."],ans:"C",
+    explain:"Đúng là C. Nghị quyết 15 (1/1959) xác định cách mạng miền Nam là <strong>khởi nghĩa giành chính quyền về tay nhân dân</strong>, kết hợp lực lượng chính trị và vũ trang. Đây là căn cứ pháp lý cho phong trào Đồng khởi (1959–1960). A là phương pháp, C là mục tiêu."},
+  ],
+  ds: [
+   {num:11,quote:"\"Sinh ra và lớn lên trong bối cảnh đất nước đã trở thành thuộc địa... Tuy rất khâm phục tinh thần yêu nước của các bậc tiền bối, nhưng Người không tán thành những con đường của họ mà quyết tâm ra đi tìm một con đường cứu nước mới. Nguyễn Tất Thành hướng tới phương Tây... để tìm hiểu xem nước Pháp và các nước khác làm thế nào, rồi trở về giúp đồng bào.\" (Vũ Quang Hiển, 2013)",
+    items:[
+     {letter:"a",text:"Chứng kiến cảnh đất nước bị mất độc lập, được kế thừa truyền thống tốt đẹp của dân tộc, quê hương và gia đình, Nguyễn Tất Thành sớm có ý chí cứu nước, giải phóng dân tộc.",ans:"T",explain:"<strong>Đúng.</strong> Tư liệu ghi rõ 'đất nước đã trở thành thuộc địa' + 'tiếp thu truyền thống yêu nước của dân tộc, gia đình và quê hương' → Nguyễn Tất Thành 'sớm có ý chí đánh đuổi thực dân Pháp, giải phóng đồng bào'. Nhận định a diễn đạt đúng tinh thần tư liệu."},
+     {letter:"b",text:"Kế thừa tinh thần yêu nước của các bậc tiền bối, giữa năm 1911, Nguyễn Tất Thành rời Bến cảng Nhà Rồng, hướng sang phương Đông để bắt đầu cuộc hành trình tìm đường cứu nước.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu nói Người 'hướng tới <em>phương Tây</em>' — không phải phương Đông. Ngày 5/6/1911, tàu Amiral Latouche-Tréville rời Sài Gòn hướng về <strong>châu Âu (phương Tây)</strong>. Phong trào Đông du (hướng Nhật Bản) là của Phan Bội Châu — Người đã không đi theo hướng đó."},
+     {letter:"c",text:"Điểm mới và độc đáo trong quyết định ra đi tìm đường cứu nước của Nguyễn Tất Thành (1911) là việc xác định mục đích và lựa chọn hướng đi.",ans:"T",explain:"<strong>Đúng.</strong> Tư liệu nêu hai điểm khác biệt: (1) mục đích — tìm hiểu 'nước Pháp và các nước khác làm thế nào, rồi trở về giúp đồng bào'; (2) hướng đi — <strong>hướng Tây</strong> thay vì Đông (Nhật) như Phan Bội Châu hay Trung Quốc như các nhà yêu nước khác."},
+     {letter:"d",text:"Việc Nguyễn Tất Thành ra đi tìm đường cứu nước (1911) đã bước đầu giải quyết được sự khủng hoảng về con đường giải phóng dân tộc Việt Nam.",ans:"F",explain:"<strong>Sai.</strong> Năm 1911 Người chỉ mới <em>ra đi</em> — chưa tìm được con đường. Khủng hoảng về đường lối chỉ được giải quyết bước đầu khi Người <strong>tìm thấy chủ nghĩa Mác–Lê-nin (1920)</strong> và hoàn toàn giải quyết khi Đảng CSVN ra đời (1930)."},
+    ]},
+   {num:12,quote:"Tháng 6-1919, Nguyễn Ái Quốc đã gửi đến Hội nghị bản Yêu sách của nhân dân An Nam, đòi chính phủ Pháp và các nước đồng minh thừa nhận các quyền của dân tộc Việt Nam. Bản Yêu sách dù không được Hội nghị Véc-xai chấp nhận, nhưng đã trở thành 'tuyên ngôn chính trị' báo hiệu sự mở đầu của giai đoạn mới trong phong trào giải phóng dân tộc của Việt Nam.",
+    items:[
+     {letter:"a",text:"Các nước đế quốc yêu cầu Nguyễn Ái Quốc gửi bản Yêu sách của nhân dân An Nam tới Hội nghị Véc-xai.",ans:"F",explain:"<strong>Sai.</strong> Chính Nguyễn Ái Quốc chủ động gửi bản Yêu sách — không ai yêu cầu. Đây là hành động tự nguyện thể hiện bản lĩnh của Người, không phải theo đề nghị của 'các nước đế quốc'."},
+     {letter:"b",text:"Bản Yêu sách của nhân dân An Nam đã mở đầu cho một giai đoạn mới trong phong trào giải phóng dân tộc của Việt Nam.",ans:"T",explain:"<strong>Đúng.</strong> Tư liệu ghi rõ: 'đã trở thành tuyên ngôn chính trị báo hiệu sự <em>mở đầu của giai đoạn mới</em> trong phong trào giải phóng dân tộc' → đây là trích dẫn trực tiếp."},
+     {letter:"c",text:"Nguyễn Ái Quốc gửi bản Yêu sách của nhân dân An Nam tới Hội nghị Véc-xai cốt để đòi quyền tự trị cho Việt Nam.",ans:"F",explain:"<strong>Sai.</strong> Bản Yêu sách đòi '<em>các quyền của dân tộc Việt Nam</em>' — trong đó có quyền tự do, dân chủ, quyền dân tộc, không phải chỉ 'tự trị'. Hơn nữa, Yêu sách 8 điểm không dùng từ 'tự trị' mà đòi các quyền cụ thể hơn."},
+     {letter:"d",text:"Sự kiện 'Hội nghị Véc-xai' cho thấy: Độc lập dân tộc chỉ có thể giành được bằng sức mình là chính.",ans:"T",explain:"<strong>Đúng.</strong> Khi Yêu sách không được chấp nhận, Nguyễn Ái Quốc rút ra bài học: <strong>không thể trông chờ vào 'lòng tốt' của đế quốc</strong> — độc lập phải tự giành bằng sức mạnh của chính dân tộc. Đây là bài học xương máu từ sự kiện Véc-xai."},
+    ]},
+   {num:13,quote:"Trong thời gian ở Pháp (1919–1923), Nguyễn Ái Quốc đến với chủ nghĩa Mác–Lê-nin, lựa chọn con đường giải phóng dân tộc theo khuynh hướng cách mạng vô sản (1920)... Những năm hoạt động ở Trung Quốc (1924–1927), Nguyễn Ái Quốc thành lập các tổ chức tiền thân của Đảng, mở nhiều lớp đào tạo cán bộ cho cách mạng Việt Nam.",
+    items:[
+     {letter:"a",text:"Nguyễn Ái Quốc lựa chọn con đường cứu nước giải phóng dân tộc khi hoạt động ở Pháp.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu ghi 'lựa chọn con đường... (1920)' — năm 1920 Người đọc Luận cương Lê-nin và bỏ phiếu gia nhập Quốc tế III. Giai đoạn 1919–1923 là 'ở Pháp' — nhưng việc chính thức lựa chọn con đường vô sản là 1920 mà không phải trong 'suốt thời gian ở Pháp'. Tuy nhiên sự kiện đúng là xảy ra khi ở Pháp → nhận định a cũng có lý, nhưng đáp án giáo viên cho là SAI do 'hoạt động ở Pháp' ngụ ý toàn bộ giai đoạn 1919–1923, trong khi việc lựa chọn chính xác là 1920."},
+     {letter:"b",text:"Nguyễn Ái Quốc sáng lập Đảng Cộng sản Việt Nam trong thời gian hoạt động ở Liên Xô.",ans:"F",explain:"<strong>Sai.</strong> ĐCSVN được thành lập tháng 2/1930 tại <strong>Hương Cảng, Trung Quốc</strong> — không phải ở Liên Xô. Nguyễn Ái Quốc ở Liên Xô 1923–1924 và 1934–1938, nhưng thành lập Đảng khi ở Trung Quốc."},
+     {letter:"c",text:"Nguyễn Ái Quốc đã xác định nhiệm vụ giải phóng dân tộc phải gắn với giải phóng xã hội.",ans:"T",explain:"<strong>Đúng.</strong> Lựa chọn con đường 'cách mạng vô sản' hàm nghĩa <strong>giải phóng dân tộc gắn với giải phóng giai cấp, giải phóng xã hội</strong> — đây là đặc điểm cốt lõi của đường lối Nguyễn Ái Quốc, phân biệt với cách mạng tư sản chỉ giải phóng dân tộc."},
+     {letter:"d",text:"Từ năm 1920, hoạt động cách mạng của Nguyễn Ái Quốc gắn với chủ nghĩa Mác–Lê-nin.",ans:"T",explain:"<strong>Đúng.</strong> 7/1920 Người đọc Luận cương Lê-nin, 12/1920 gia nhập Quốc tế III → từ năm 1920, mọi hoạt động của Người đều dựa trên nền tảng <strong>chủ nghĩa Mác–Lê-nin</strong> — đây là bước ngoặt tư tưởng quyết định."},
+    ]},
+   {num:21,quote:"\"Luận cương của Lê-nin làm cho tôi rất cảm động, phấn khởi, sáng tỏ, tin tưởng biết bao... 'Hỡi đồng bào bị đoạ đày đau khổ! Đây là cái cần thiết cho chúng ta, đây là con đường giải phóng chúng ta!' Từ đó tôi hoàn toàn tin theo Lê-nin, tin theo Quốc tế thứ ba.\" (Hồ Chí Minh, Toàn tập, T.12)",
+    items:[
+     {letter:"a",text:"Lúc đầu, chính là chủ nghĩa yêu nước, chứ chưa phải là chủ nghĩa cộng sản đã đưa Nguyễn Ái Quốc đến với Lê-nin, tin theo Quốc tế thứ ba.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu cho thấy Người tin theo Lê-nin vì tìm thấy 'con đường giải phóng' cho đồng bào — đây là sự kết hợp của cả lòng yêu nước lẫn lý tưởng cộng sản. Không thể tách rời 'chủ nghĩa yêu nước' với 'chủ nghĩa cộng sản' trong trường hợp này; cả hai là một thể thống nhất trong tư tưởng HCM."},
+     {letter:"b",text:"Sự kiện Nguyễn Ái Quốc 'hoàn toàn tin theo Lê-nin, tin theo Quốc tế thứ ba' đã đánh dấu cuộc hành trình tìm đường cứu nước được kết thúc.",ans:"T",explain:"<strong>Đúng.</strong> Khi tìm thấy 'con đường giải phóng' qua Luận cương Lê-nin, Người đã <strong>tìm được đáp án cho câu hỏi 'đi theo con đường nào?'</strong> — đây là điểm kết thúc quá trình tìm tòi (dù việc chuẩn bị tổ chức còn tiếp tục)."},
+     {letter:"c",text:"Trước khi đọc Sơ thảo lần thứ nhất những luận cương về vấn đề dân tộc và vấn đề thuộc địa, Nguyễn Ái Quốc đã đọc nhiều cuốn sách của Lê-nin.",ans:"F",explain:"<strong>Sai.</strong> Tư liệu không đề cập Người đã đọc sách của Lê-nin trước. Hồi ký cho thấy Luận cương là lần <em>đầu tiên</em> Người tiếp xúc sâu với tư tưởng Lê-nin. Không có bằng chứng từ tư liệu này hay các tài liệu khác cho thấy Người đọc 'nhiều cuốn sách Lê-nin' trước đó."},
+     {letter:"d",text:"Nguyễn Ái Quốc hoàn toàn tin theo Lê-nin, tin theo Quốc tế thứ ba vì đó là con đường cứu nước gắn giải phóng dân tộc với tiến bộ xã hội.",ans:"T",explain:"<strong>Đúng.</strong> Con đường cách mạng vô sản theo Lê-nin gắn liền hai mục tiêu: <strong>giải phóng dân tộc khỏi thực dân</strong> + <strong>giải phóng giai cấp công nhân, nông dân</strong> (tiến bộ xã hội). Đây là lý do sâu xa Người chọn con đường này — phù hợp với câu nói 'con đường giải phóng chúng ta'."},
+    ]},
+   {num:22,quote:"\"Đầu năm 1927, một cuốn sách mỏng với nhan đề là 'Đường Kách mệnh'... Cuốn sách tóm tắt những bài giảng của Nguyễn Ái Quốc về chủ nghĩa Mác–Lê-nin và nhiệm vụ của cách mạng Việt Nam... trong cuốn 'Đường Kách mệnh', Nguyễn Ái Quốc vạch ra con đường cụ thể giải phóng dân tộc.\" (E. Cô-bê-lép, 1985)",
+    items:[
+     {letter:"a",text:"Cuốn Đường Kách mệnh là tập hợp các bài giảng của Nguyễn Ái Quốc trong thời gian đào tạo cán bộ cách mạng ở Quảng Châu (Trung Quốc).",ans:"T",explain:"<strong>Đúng.</strong> Tư liệu: 'tóm tắt những bài giảng của Nguyễn Ái Quốc' — và lịch sử ghi nhận: 1924–1927 Người mở các lớp đào tạo cán bộ tại <strong>Quảng Châu</strong>, Đường Kách mệnh (1927) chính là tổng hợp các bài giảng đó. Xuất bản bởi 'Hội Liên hiệp các dân tộc bị áp bức ở Á Đông' trụ sở tại Quảng Châu."},
+     {letter:"b",text:"Cùng với báo Thanh niên, cuốn sách Đường Kách mệnh về sau trở thành Cương lĩnh chính trị đầu tiên của Đảng Cộng sản Việt Nam.",ans:"F",explain:"<strong>Sai.</strong> <strong>Cương lĩnh chính trị đầu tiên</strong> là Chính cương vắn tắt và Sách lược vắn tắt do Nguyễn Ái Quốc soạn thảo tại Hội nghị thành lập Đảng (2/1930). Đường Kách mệnh là tài liệu chuẩn bị về tư tưởng, không phải cương lĩnh chính thức."},
+     {letter:"c",text:"Tác phẩm Bản án chế độ thực dân Pháp và cuốn Đường Kách mệnh đều do Nguyễn Ái Quốc soạn thảo, phục vụ cho hoạt động cách mạng.",ans:"T",explain:"<strong>Đúng.</strong> Cả hai tác phẩm đều do Nguyễn Ái Quốc viết: <em>Bản án CĐTDP</em> (1925, tố cáo tội ác thực dân) và <em>Đường Kách mệnh</em> (1927, vạch đường cứu nước) — đều phục vụ trực tiếp cho công tác tuyên truyền và đào tạo cách mạng."},
+     {letter:"d",text:"Trong cuốn Đường Kách mệnh, Nguyễn Ái Quốc đã bước đầu vạch ra phương hướng, con đường cụ thể để giải phóng dân tộc Việt Nam.",ans:"T",explain:"<strong>Đúng.</strong> Tư liệu xác nhận: 'Nguyễn Ái Quốc vạch ra <em>con đường cụ thể giải phóng dân tộc</em>' trong Đường Kách mệnh — đây là nội dung cốt lõi phân biệt với Bản án (tố cáo tội ác) nhưng chưa chỉ rõ đường đi. Đường Kách mệnh tiến thêm một bước: đề ra con đường hành động."},
+    ]},
+   {num:23,quote:"\"Hội nghị hợp nhất... do Nguyễn Ái Quốc chủ trì đã thông qua Chính cương vắn tắt, Sách lược vắn tắt... Cương lĩnh chính trị đầu tiên của Đảng đã xác định... làm cuộc 'tư sản dân quyền cách mạng và thổ địa cách mạng để đi tới xã hội cộng sản'... Tư tưởng cốt lõi của Cương lĩnh là 'Độc lập, tự do'.\"",
+    items:[
+     {letter:"a",text:"Hội nghị hợp nhất các tổ chức cộng sản của Việt Nam do Nguyễn Ái Quốc chủ trì.",ans:"T",explain:"<strong>Đúng.</strong> Tư liệu ghi rõ: 'Hội nghị hợp nhất... do Nguyễn Ái Quốc chủ trì' — đây là sự kiện lịch sử đúng. Hội nghị diễn ra từ 3-7/2/1930 tại Cửu Long (Hong Kong)."},
+     {letter:"b",text:"Đảng Cộng sản Việt Nam ra đời đã chấm dứt thời kì khủng hoảng con đường cứu nước.",ans:"T",explain:"<strong>Đúng.</strong> ĐCSVN ra đời đánh dấu <strong>chấm dứt thời kỳ khủng hoảng về đường lối</strong> (kể từ khi phong trào Cần Vương thất bại đến 1930). Đảng mang đến đường lối cách mạng vô sản rõ ràng, đúng đắn. Đây là nhận định cơ bản trong SGK Lịch sử."},
+     {letter:"c",text:"Cương lĩnh chính trị đầu tiên của Đảng có tư tưởng cốt lõi là 'Độc lập, tự do'.",ans:"T",explain:"<strong>Đúng.</strong> Tư liệu ghi rõ: 'Tư tưởng cốt lõi của Cương lĩnh là Độc lập, tự do' — đây là trích dẫn trực tiếp. Hai giá trị này xuyên suốt cương lĩnh và tư tưởng Hồ Chí Minh ('Không có gì quý hơn độc lập, tự do')."},
+     {letter:"d",text:"Đảng Cộng sản Việt Nam ra đời là sự chuẩn bị đầu tiên có tính quyết định cho các bước phát triển nhảy vọt mới trong lịch sử Việt Nam.",ans:"T",explain:"<strong>Đúng.</strong> ĐCSVN ra đời là <strong>sự chuẩn bị quyết định</strong> vì: Đảng cung cấp đường lối, tổ chức, lãnh đạo — không có Đảng thì không thể có Cách mạng 8/1945, kháng chiến chống Pháp–Mỹ thắng lợi... Đây là nhận định chuẩn theo SGK và quan điểm chính thống."},
+    ]},
+   {num:24,quote:"(Bảng niên biểu các sự kiện tiêu biểu liên quan đến Nguyễn Ái Quốc – Hồ Chí Minh)",
+    items:[
+     {letter:"a",text:"Năm 1920, Nguyễn Ái Quốc gia nhập Đảng Xã hội Pháp và tán thành gia nhập Quốc tế thứ ba.",ans:"T",explain:"<strong>Đúng.</strong> 1919 gia nhập Đảng Xã hội Pháp; 12/1920 tại Đại hội Tours bỏ phiếu tán thành gia nhập Quốc tế III và tham gia sáng lập Đảng Cộng sản Pháp. Năm 1920 ghi dấu cả hai sự kiện quan trọng này."},
+     {letter:"b",text:"Năm 1941, Nguyễn Ái Quốc triệu tập Hội nghị Trung ương lần thứ 8 và sáng lập Mặt trận Việt Minh.",ans:"T",explain:"<strong>Đúng.</strong> 5/1941, sau khi về nước (Pắc Bó, Cao Bằng), Người triệu tập và chủ trì <strong>Hội nghị TW lần 8</strong> (đề ra nhiệm vụ giải phóng dân tộc) và sáng lập <strong>Mặt trận Việt Minh</strong> — hai sự kiện cùng xảy ra tháng 5/1941."},
+     {letter:"c",text:"Ngày 2-9-1945, Chủ tịch Hồ Chí Minh đọc bản Tuyên ngôn Độc lập, khai sinh ra nước VNDCCH.",ans:"T",explain:"<strong>Đúng.</strong> <strong>2/9/1945</strong> tại Quảng trường Ba Đình, Chủ tịch Hồ Chí Minh đọc Tuyên ngôn Độc lập, chính thức tuyên bố thành lập nước Việt Nam Dân chủ Cộng hòa. Đây là sự kiện lịch sử không thể phủ nhận."},
+     {letter:"d",text:"Tháng 9-1969, Chủ tịch Hồ Chí Minh qua đời khi sự nghiệp giải phóng miền Nam chưa hoàn thành.",ans:"T",explain:"<strong>Đúng.</strong> Chủ tịch Hồ Chí Minh từ trần ngày <strong>2/9/1969</strong> — khi đất nước vẫn còn bị chia cắt, cuộc kháng chiến chống Mỹ chưa kết thúc (kết thúc 30/4/1975). Người không được chứng kiến ngày thống nhất — điều này được ghi trong Di chúc của Người."},
+    ]},
+  ]
+ }
+};
+
+// ═══════════════════════════════════════════════════════
+// STATE & HELPERS
+// ═══════════════════════════════════════════════════════
+const state = {
+ 1:{mc:{},ds:{},score:0,total:0,shuffled:false,mcOrder:null},
+ 2:{mc:{},ds:{},score:0,total:0,shuffled:false,mcOrder:null},
+ 3:{mc:{},ds:{},score:0,total:0,shuffled:false,mcOrder:null}
+};
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function countTotal(p){
+ return PRACTICES[p].mc.length + PRACTICES[p].ds.reduce((s,q)=>s+q.items.length,0);
+}
+
+function countDone(p){
+ const s=state[p];
+ let d=Object.keys(s.mc).length;
+ PRACTICES[p].ds.forEach(q=>q.items.forEach(item=>{if(s.ds[q.num+item.letter]!==undefined)d++;}));
+ return d;
+}
+
+function countScore(p){
+ const s=state[p];
+ let sc=0;
+ Object.entries(s.mc).forEach(([k,v])=>{const q=PRACTICES[p].mc.find(q=>q.num==k);if(q&&v===q.ans)sc++;});
+ PRACTICES[p].ds.forEach(q=>q.items.forEach(item=>{const key=q.num+item.letter;if(s.ds[key]!==undefined&&s.ds[key]===item.ans)sc++;}));
+ return sc;
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════
+function renderAll(){[1,2,3].forEach(p=>{state[p].mcOrder=PRACTICES[p].mc.map((_,i)=>i);renderPractice(p);});}
+
+function renderPractice(p){
+ const data=PRACTICES[p];
+ const s=state[p];
+ const order=s.mcOrder||data.mc.map((_,i)=>i);
+ // MC
+ document.getElementById('p'+p+'-mc').innerHTML=order.map((idx,dispIdx)=>{
+  const q=data.mc[idx];const ans=s.mc[q.num];const done=ans!==undefined;
+  let cls='question-card'+(done?(ans===q.ans?' correct':' wrong'):'');
+  const opts=q.opts.map((opt,oi)=>{
+   const L=['A','B','C','D'][oi];let ocls='option';
+   if(done){if(L===q.ans)ocls+=' correct-ans';else if(L===ans&&ans!==q.ans)ocls+=' wrong-ans';}
+   else if(ans===L)ocls+=' selected';
+   return `<label class="${ocls}" onclick="answerMC(${p},${q.num},'${L}')"><input type="radio" ${ans===L?'checked':''}><span class="opt-label">${L}</span> ${opt.replace(/^[A-D]\.\s*/,'')}</label>`;
+  }).join('');
+  const shuffTag=s.shuffled?`<span style="font-size:10px;background:#fef3c7;color:#92400e;padding:1px 7px;border-radius:10px;margin-left:6px;font-weight:600">gốc câu ${q.num}</span>`:'';
+  let fb='';
+  if(done){
+   const ok=ans===q.ans;
+   const exBtn=q.explain?`<button class="explain-btn" onclick="toggleEx('ex${p}-${q.num}')">Xem giải thích</button><div class="explain-box" id="ex${p}-${q.num}">${q.explain}</div>`:'';
+   fb=ok?`<div class="feedback correct-fb show">✓ Chính xác! ${exBtn}</div>`:`<div class="feedback wrong-fb show">✗ Sai! Đáp án đúng: <strong>${q.ans}</strong> ${exBtn}</div>`;
+  }
+  return `<div class="${cls}"><div class="q-header"><div class="q-num">${dispIdx+1}</div><div class="q-text">${q.q}${shuffTag}</div></div><div class="options">${opts}</div>${fb}</div>`;
+ }).join('');
+ // DS
+ document.getElementById('p'+p+'-ds').innerHTML=data.ds.map(dsq=>`
+  <div class="ds-section">
+   <div class="ds-q-title"><strong>Câu ${dsq.num}.</strong> Đọc đoạn tư liệu, chọn <span class="ds-badge">Đúng / Sai</span> cho mỗi ý:</div>
+   <div class="ds-quote">${dsq.quote}</div>
+   <div class="ds-options">
+    ${dsq.items.map(item=>{
+     const key=dsq.num+item.letter;const userAns=s.ds[key];const done=userAns!==undefined;
+     let cls='ds-option';
+     if(done){if(userAns===item.ans)cls+=userAns==='T'?' correct-T':' correct-F';else cls+=' wrong-ans-ds';}
+     else if(userAns==='T')cls+=' selected-T';else if(userAns==='F')cls+=' selected-F';
+     const tSel=userAns==='T'?'sel':'';const fSel=userAns==='F'?'sel':'';
+     let fb='';
+     if(done){
+      const ok=userAns===item.ans;
+      fb=`<div class="ds-feedback ${ok?'ok':'nok'} show">${ok?'✓ Đúng rồi!':'✗ Sai!'} ${item.explain}</div>`;
+     }
+     return `<div class="${cls}">
+      <div class="ds-btns"><button class="ds-btn ds-btn-T ${tSel}" onclick="answerDS(${p},${dsq.num},'${item.letter}','T')">Đ</button><button class="ds-btn ds-btn-F ${fSel}" onclick="answerDS(${p},${dsq.num},'${item.letter}','F')">S</button></div>
+      <div style="flex:1"><strong>${item.letter.toUpperCase()})</strong> ${item.text}${fb}</div>
+     </div>`;
+    }).join('')}
+   </div>
+  </div>`).join('');
+ updateScore(p);
+}
+
+function answerMC(p,num,letter){
+ if(state[p].mc[num]!==undefined)return;
+ state[p].mc[num]=letter;
+ renderPractice(p);
+}
+
+function answerDS(p,qnum,letter,val){
+ const key=qnum+letter;
+ if(state[p].ds[key]!==undefined)return;
+ state[p].ds[key]=val;
+ const q=PRACTICES[p].ds.find(q=>q.num===qnum);
+ if(q){const item=q.items.find(i=>i.letter===letter);if(item&&val===item.ans)state[p].score++;}
+ renderPractice(p);
+}
+
+function toggleEx(id){document.getElementById(id)?.classList.toggle('show');}
+
+const PC=0.312,PW=0.19;
+function updateScore(p){
+ const done=countDone(p),total=countTotal(p),correct=countScore(p),wrong=done-correct;
+ const grade=Math.max(0,Math.min(10,correct*PC-wrong*PW));
+ document.getElementById('score'+p+'-circle').innerHTML=grade.toFixed(2)+'<small>/10đ</small>';
+ document.getElementById('progress'+p).style.width=Math.round(done/total*100)+'%';
+ const det=document.getElementById('score'+p+'-detail');
+ if(done===0){document.getElementById('score'+p+'-text').textContent='Chưa làm câu nào. Bấm chọn để bắt đầu!';det.style.display='none';}
+ else{
+  document.getElementById('s'+p+'-correct').textContent=`✓ ${correct} đúng (+${(correct*PC).toFixed(2)}đ)`;
+  document.getElementById('s'+p+'-wrong').textContent=`✗ ${wrong} sai (−${(wrong*PW).toFixed(2)}đ)`;
+  document.getElementById('s'+p+'-skip').textContent=`— ${total-done} chưa làm`;
+  det.style.display='flex';
+  if(done<total)document.getElementById('score'+p+'-text').textContent=`Đã làm ${done}/${total} | Điểm tạm: ${grade.toFixed(2)}/10`;
+  else{const r=grade>=8.5?'🏆 Xuất sắc!':grade>=7?'🥈 Khá giỏi!':grade>=5?'✅ Trung bình khá':'📚 Cần ôn thêm!';document.getElementById('score'+p+'-text').textContent=`Hoàn thành! ${grade.toFixed(2)}/10 — ${r}`;}
+ }
+}
+
+function toggleShuffle(p){
+ const s=state[p];
+ if(countDone(p)>0){if(!confirm('Xáo trộn sẽ làm lại từ đầu. Bạn có chắc không?'))return;s.mc={};s.ds={};s.score=0;}
+ s.shuffled=!s.shuffled;
+ s.mcOrder=s.shuffled?shuffle(PRACTICES[p].mc.map((_,i)=>i)):PRACTICES[p].mc.map((_,i)=>i);
+ const btn=document.getElementById('shuffle-btn-'+p);
+ btn.classList.toggle('active',s.shuffled);
+ btn.innerHTML=s.shuffled?'🔀 Đang xáo':'🔀 Xáo trộn';
+ renderPractice(p);
+}
+
+function resetPractice(p){
+ const s=state[p];s.mc={};s.ds={};s.score=0;
+ s.mcOrder=s.shuffled?shuffle(PRACTICES[p].mc.map((_,i)=>i)):PRACTICES[p].mc.map((_,i)=>i);
+ renderPractice(p);
+}
+
+function showPractice(n){
+ document.querySelectorAll('.practice-panel').forEach(p=>p.style.display='none');
+ document.getElementById('practice-'+n).style.display='block';
+ document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n-1));
+}
+
+renderAll();
+</script>
+</body>
+</html>
